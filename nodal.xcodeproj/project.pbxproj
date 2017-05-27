@@ -155,6 +155,7 @@
 				TargetAttributes = {
 					033EAE371EBF9F0A000F4053 = {
 						CreatedOnToolsVersion = 8.3.2;
+						DevelopmentTeam = YJTZ9H869C;
 						ProvisioningStyle = Automatic;
 					};
 					033EAE4B1EBF9F0A000F4053 = {
@@ -353,6 +354,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = YJTZ9H869C;
 				INFOPLIST_FILE = nodal/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.lehmacdj.nodal;
@@ -365,6 +367,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = YJTZ9H869C;
 				INFOPLIST_FILE = nodal/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.lehmacdj.nodal;
