@@ -16,7 +16,7 @@ protocol Window {
 struct Point {
     var x: Double
     var y: Double
-    
+
     var cgPoint: CGPoint {
         get {
             return CGPoint(x: CGFloat(x), y: CGFloat(y))
@@ -26,22 +26,22 @@ struct Point {
 
 // an abstract region that contains elements that belong in the canvas
 protocol Canvas {
-    func projected(onto kernel: Window) -> Canvas
+    func projected(onto window: Window) -> Canvas
     var scale: Int { get }
 }
 
 // represents the entire graph / image that is being displayed
 class CompleteCanvas: Canvas {
     let scale = 0
-    
+
     var elements: [CanvasElement] = []
-    
+
     func add(element: CanvasElement) {
         elements.append(element)
     }
 
-    func projected(onto kernel: Window) -> Canvas {
-        return CanvasSlice(backing: self, domain: kernel)
+    func projected(onto window: Window) -> Canvas {
+        return CanvasSlice(backing: self, domain: window)
     }
 }
 
@@ -51,14 +51,14 @@ class CanvasSlice: Canvas {
 
     private let backingCanvas: Canvas
     private let window: Window
-    
-    func projected(onto kernel: Window) -> Canvas {
-        return CanvasSlice(backing: self, domain: kernel)
+
+    func projected(onto window: Window) -> Canvas {
+        return CanvasSlice(backing: self, domain: window)
     }
-    
-    init(backing canvas: Canvas, domain kernel: Window) {
+
+    init(backing canvas: Canvas, domain window: Window) {
         backingCanvas = canvas
-        window = kernel
+        self.window = window
     }
 }
 
@@ -69,15 +69,15 @@ protocol CanvasElement: Drawable {
 
 class StraightLine: CanvasElement, Drawable {
     let scale = 0
-    
+
     let start: Point
     let end: Point
-    
+
     init(from s: Point, to e: Point) {
         start = s
         end = e
     }
-    
+
     func draw() {
         let line = UIBezierPath()
         print("drawing a line")
