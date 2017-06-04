@@ -9,8 +9,13 @@
 import UIKit
 import Foundation
 
-// a window into which one can view a canvas, e.g. a zoomed view of a canvas
+// a particular scaling/view of a canvas
 protocol Window {
+    var x: Double { get }
+    var y: Double { get }
+    var dx: Double { get }
+    var dy: Double { get }
+    var scale: Int { get }
 }
 
 struct Point {
@@ -34,6 +39,7 @@ protocol Canvas {
 class CompleteCanvas: Canvas {
     let scale = 0
 
+    // a representation of every element in the canvas
     var elements: [CanvasElement] = []
 
     func add(element: CanvasElement) {
@@ -47,7 +53,7 @@ class CompleteCanvas: Canvas {
 
 // slice that represents only a subsection of the full Canvas
 class CanvasSlice: Canvas {
-    let scale = 1
+    let scale = 0
 
     private let backingCanvas: Canvas
     private let window: Window
@@ -62,29 +68,36 @@ class CanvasSlice: Canvas {
     }
 }
 
+protocol Representable {
+    var path: UIBezierPath { get }
+}
+
 // an element that can be put in the canvas
-protocol CanvasElement: Drawable {
+protocol CanvasElement: Representable {
     var scale: Int { get }
 }
 
-class StraightLine: CanvasElement, Drawable {
+class StraightLine: CanvasElement {
     let scale = 0
 
-    let start: Point
-    let end: Point
+    let path = UIBezierPath()
 
     init(from s: Point, to e: Point) {
-        start = s
-        end = e
+        path.move(to: s.cgPoint)
+        path.addLine(to: e.cgPoint)
     }
+}
 
-    func draw() {
-        let line = UIBezierPath()
-        print("drawing a line")
-        UIColor.blue.set()
-        line.lineWidth = 1
-        line.move(to: start.cgPoint)
-        line.addLine(to: end.cgPoint)
-        line.stroke()
+class Path: CanvasElement {
+    let scale = 0
+    let path: UIBezierPath
+
+    init(_ path: UIBezierPath) {
+        self.path = path
     }
+}
+
+class NullElement: CanvasElement {
+    let scale = 0
+    let path = UIBezierPath()
 }

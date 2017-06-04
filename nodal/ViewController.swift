@@ -11,40 +11,30 @@ import UIKit
 class ViewController: UIViewController {
 
     let canvas = CompleteCanvas()
-    
-    var currentAction: Action? = nil
-    
+
     @IBOutlet weak var canvasView: DrawingCanvasView!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        let rec = ActionGestureRecognizer(target: self, action: #selector(actionEventRecieved(_:)))
+        canvasView.addGestureRecognizer(rec)
         print("loaded!")
     }
-
-    @IBAction func receivedSwipe(_ gr: UIPanGestureRecognizer) {
-        let pc = gr.location(in: view)
-        switch gr.state {
-        case .began:
-            print(pc)
-            currentAction = DrawingSmoothLine(point: gr.location(in: view))
-        case .changed:
-            (currentAction! as! DrawingSmoothLine).add(pc)
-            canvasView.temporaryElement = currentAction?.partial(with: pc)
+    
+    func actionEventRecieved(_ recognizer: ActionGestureRecognizer) {
+        switch recognizer.state {
+        case .began,
+             .changed:
+            canvasView.temporaryElement = recognizer.action
         case .ended:
-            print(pc)
-            let res = currentAction!.finish(with: pc)
-            canvas.add(element: res)
-            canvasView.temporaryElement = nil
-            canvasView.add(element: res)
-            currentAction = nil
+            if let res = recognizer.action?.finish() {
+                canvas.add(element: res)
+                canvasView.temporaryElement = nil
+                canvasView.add(element: res)
+            }
         default:
-            print("Unexpected type of GestureState!")
+            print("something broke, we are in an unexpected state")
         }
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 }

@@ -9,46 +9,45 @@
 import UIKit
 
 class DrawingCanvasView: UIView {
-    private var elements: [Drawable] = []
-    var temporaryElement: Drawable? = nil {
+    private var elements: [Representable] = []
+    var temporaryElement: Representable? = nil {
         didSet {
             setNeedsDisplay()
         }
     }
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = UIColor.white
         contentMode = .redraw
+        
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         backgroundColor = UIColor.white
         contentMode = .redraw
-        print(bounds)
     }
-    
-    func add(element e: Drawable) {
-        elements.append(e)
+
+    func add(element: Representable) {
+        elements.append(element)
         setNeedsDisplay()
     }
-    
+
+    func clear() {
+        elements.removeAll()
+        setNeedsDisplay()
+    }
+
     override func draw(_ rect: CGRect) {
-        super.draw(rect)
-        
-        print("redrawing!")
-        
-        for e in elements {
-            e.draw()
+        if let t = temporaryElement {
+            UIColor.blue.set()
+            t.path.stroke()
         }
-        
-        if let temp = temporaryElement {
-            temp.draw()
+
+        for e in elements {
+            UIColor.black.set()
+            e.path.stroke()
         }
     }
-}
-
-protocol Drawable {
-    func draw()
 }

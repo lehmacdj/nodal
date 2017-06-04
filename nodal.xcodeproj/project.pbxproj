@@ -16,6 +16,7 @@
 		036ECA8F1EC0F03F0071AC02 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036ECA8E1EC0F03F0071AC02 /* Action.swift */; };
 		036ECA911EC0F0B20071AC02 /* DrawingCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036ECA901EC0F0B20071AC02 /* DrawingCanvasView.swift */; };
 		036ECA931EC0F0C30071AC02 /* Canvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036ECA921EC0F0C30071AC02 /* Canvas.swift */; };
+		0376B2331EE106DD007BFC1A /* ActionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0376B2321EE106DD007BFC1A /* ActionGestureRecognizer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,7 @@
 		036ECA8E1EC0F03F0071AC02 /* Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		036ECA901EC0F0B20071AC02 /* DrawingCanvasView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingCanvasView.swift; sourceTree = "<group>"; };
 		036ECA921EC0F0C30071AC02 /* Canvas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Canvas.swift; sourceTree = "<group>"; };
+		0376B2321EE106DD007BFC1A /* ActionGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionGestureRecognizer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +89,7 @@
 				036ECA8E1EC0F03F0071AC02 /* Action.swift */,
 				033EAE3D1EBF9F0A000F4053 /* ViewController.swift */,
 				036ECA901EC0F0B20071AC02 /* DrawingCanvasView.swift */,
+				0376B2321EE106DD007BFC1A /* ActionGestureRecognizer.swift */,
 				033EAE3F1EBF9F0A000F4053 /* Main.storyboard */,
 				033EAE421EBF9F0A000F4053 /* Assets.xcassets */,
 				033EAE441EBF9F0A000F4053 /* LaunchScreen.storyboard */,
@@ -214,6 +217,7 @@
 				036ECA8F1EC0F03F0071AC02 /* Action.swift in Sources */,
 				036ECA931EC0F0C30071AC02 /* Canvas.swift in Sources */,
 				033EAE3C1EBF9F0A000F4053 /* AppDelegate.swift in Sources */,
+				0376B2331EE106DD007BFC1A /* ActionGestureRecognizer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
