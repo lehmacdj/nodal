@@ -21,7 +21,7 @@ class ViewController: UIViewController {
         canvasView.addGestureRecognizer(rec)
         print("loaded!")
     }
-    
+
     func actionEventRecieved(_ recognizer: ActionGestureRecognizer) {
         switch recognizer.state {
         case .began,

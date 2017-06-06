@@ -19,9 +19,7 @@ class ActionGestureRecognizer: UIGestureRecognizer {
     public var actionProvider: ActionProvider = { DrawSmoothLine() }
 
     public var action: Action? {
-        get {
-            return trackingData?.action
-        }
+        return trackingData?.action
     }
 
     enum TouchType {

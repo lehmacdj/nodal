@@ -6,7 +6,6 @@
 //  Copyright © 2017 Devin Lehmacher. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 typealias ActionProvider = () -> Action
