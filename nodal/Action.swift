@@ -27,8 +27,7 @@ enum SampleData {
     case touch3D(force: CGFloat)
     case pencil(force: CGFloat,
                 altitude: CGFloat,
-                azimuth: CGFloat,
-                expectedUpdates: UITouchProperties)
+                azimuth: CGFloat)
 }
 
 struct SamplePoint {
@@ -48,8 +47,7 @@ struct SamplePoint {
         case .stylus:
             self.data = .pencil(force: touch.force,
                            altitude: touch.altitudeAngle,
-                           azimuth: touch.azimuthAngle(in: view),
-                           expectedUpdates: touch.estimatedPropertiesExpectingUpdates)
+                           azimuth: touch.azimuthAngle(in: view))
         default:
             return nil
         }
