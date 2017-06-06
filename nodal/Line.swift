@@ -1,3 +1,0 @@
-class Line {
-    var points = []
-}
