@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MainNodalViewController.swift
 //  nodal
 //
 //  Created by Devin Lehmacher on 5/7/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class MainNodalViewController: UIViewController {
 
     let canvas = CompleteCanvas()
 
