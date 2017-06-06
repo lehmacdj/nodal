@@ -18,6 +18,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         let rec = ActionGestureRecognizer(target: self, action: #selector(actionEventRecieved(_:)))
+        rec.touchType = .pencil
         canvasView.addGestureRecognizer(rec)
         print("loaded!")
     }
@@ -26,7 +27,9 @@ class ViewController: UIViewController {
         switch recognizer.state {
         case .began,
              .changed:
-            canvasView.temporaryElement = recognizer.action
+            if let representation = recognizer.action as? Representable? {
+                canvasView.temporaryElement = representation
+            }
         case .ended:
             if let res = recognizer.action?.finish() {
                 canvas.add(element: res)

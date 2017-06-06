@@ -10,64 +10,43 @@ import UIKit
 
 typealias ActionProvider = () -> Action
 
-protocol Action: Representable {
+protocol Action {
     func add(sample: SamplePoint)
     func add(predicted sample: SamplePoint)
+    // add a sample that contains estimated data along
+    // with a number that must be able to be used to 
+    // correspond to it
+    func add(estimated sample: SamplePoint, with id: NSNumber)
+
+    func clearPredicted()
+
+    func update(estimated sample: SamplePoint, with id: NSNumber)
+    func update(final sample: SamplePoint, with id: NSNumber)
+
     func finish() -> CanvasElement?
 }
 
-extension Action {
-    // by default ignore predicted samples for all actions
+// implements a default for Action's that do not need to use predicted
+// touches or update estimated data
+// this is necessary because swift doesn't support dynamic dispatch for
+// protocols, so we can't simply provide a default implementation and then
+// override it
+protocol SimpleAction: Action {}
+extension SimpleAction {
     func add(predicted sample: SamplePoint) {}
-}
+    func clearPredicted() {}
 
-enum SampleData {
-    case touch
-    case touch3D(force: CGFloat)
-    case pencil(force: CGFloat,
-                altitude: CGFloat,
-                azimuth: CGFloat)
-}
-
-struct SamplePoint {
-    let timestamp: TimeInterval
-    let location: CGPoint
-    var data: SampleData
-
-    init?(for touch: UITouch, in view: UIView) {
-        self.location = touch.preciseLocation(in: view)
-        self.timestamp = touch.timestamp
-        let hasForceTouch = view.traitCollection.forceTouchCapability == .available
-        switch touch.type {
-        case .direct where hasForceTouch:
-            self.data = .touch3D(force: touch.force)
-        case .direct where !hasForceTouch:
-            self.data = .touch
-        case .stylus:
-            self.data = .pencil(force: touch.force,
-                           altitude: touch.altitudeAngle,
-                           azimuth: touch.azimuthAngle(in: view))
-        default:
-            return nil
-        }
+    func add(estimated sample: SamplePoint, with id: NSNumber) {
+        self.add(sample: sample)
     }
+    func update(estimated sample: SamplePoint, with id: NSNumber) {}
+    func update(final sample: SamplePoint, with id: NSNumber) {}
 }
 
-class DrawLine: Action {
+
+class DrawStraightLine: SimpleAction {
     var firstPoint: CGPoint? = nil
     var secondPoint: CGPoint? = nil
-    var path: UIBezierPath {
-        get {
-            if let first = firstPoint, let second = secondPoint {
-                let path = UIBezierPath()
-                path.move(to: first)
-                path.addLine(to: second)
-                return path
-            } else {
-                return UIBezierPath()
-            }
-        }
-    }
 
     func add(sample: SamplePoint) {
         if firstPoint == nil {
@@ -89,16 +68,29 @@ class DrawLine: Action {
     }
 }
 
-class DrawSmoothLine: Action {
-    var backingPath: UIBezierPath? = nil
-
+extension DrawStraightLine: Representable {
     var path: UIBezierPath {
         get {
-            if let path = backingPath {
+            if let first = firstPoint, let second = secondPoint {
+                let path = UIBezierPath()
+                path.move(to: first)
+                path.addLine(to: second)
                 return path
             } else {
                 return UIBezierPath()
             }
+        }
+    }
+}
+
+class DrawPrimitiveLine: SimpleAction {
+    var backingPath: UIBezierPath? = nil
+
+    var path: UIBezierPath {
+        if let path = backingPath {
+            return path
+        } else {
+            return UIBezierPath()
         }
     }
 
@@ -117,5 +109,54 @@ class DrawSmoothLine: Action {
         } else {
             return nil
         }
+    }
+}
+
+extension DrawPrimitiveLine: Representable {}
+
+// a simple class that returns a basis for strokes that draw different kinds
+// of lines based on a sequence of points
+// subclasses should override finish to produce the correct canvas element
+class BuildStroke: Action {
+    var points = [SamplePoint]()
+
+    // map index to the index in `points` that contains the data for the corresponding UITouch
+    var estimationMap = [NSNumber:Int]()
+
+    var predictedPoints = [SamplePoint]()
+
+    func add(sample: SamplePoint) {
+        points.append(sample)
+    }
+
+    func add(predicted sample: SamplePoint) {
+        predictedPoints.append(sample)
+    }
+
+    func clearPredicted() {
+        predictedPoints.removeAll()
+    }
+
+    func add(estimated sample: SamplePoint, with id: NSNumber) {
+        let index = points.count
+        points.append(sample)
+        estimationMap[id] = index
+    }
+
+    func update(estimated sample: SamplePoint, with id: NSNumber) {
+        if let index = estimationMap[id] {
+            points[index] = sample
+        }
+    }
+
+    func update(final sample: SamplePoint, with id: NSNumber) {
+        if let index = estimationMap[id] {
+            points[index] = sample
+            estimationMap.removeValue(forKey: id)
+        }
+    }
+
+    func finish() -> CanvasElement? {
+        return nil
     }
 }

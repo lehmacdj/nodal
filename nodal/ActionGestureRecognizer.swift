@@ -16,7 +16,7 @@ let CANCELATION_INTERVAL = TimeInterval(0.1)
 // recognizes Actions
 class ActionGestureRecognizer: UIGestureRecognizer {
     // the action to perform on touches
-    public var actionProvider: ActionProvider = { DrawSmoothLine() }
+    public var actionProvider: ActionProvider = { DrawPrimitiveLine() }
 
     public var action: Action? {
         return trackingData?.action
@@ -83,13 +83,24 @@ class ActionGestureRecognizer: UIGestureRecognizer {
 
         for touch in event.coalescedTouches(for: trackingData.touch)! {
             if let sample = SamplePoint(for: touch, in: view!) {
-                trackingData.action.add(sample: sample)
+                // should we consider a sample final if it
+                // still has estimated data but it's properties have
+                // not yet been updated?
+                if touch.estimatedProperties.isEmpty {
+                    trackingData.action.add(sample: sample)
+                } else {
+                    trackingData.action.add(estimated: sample,
+                                            // there are estimated properties
+                                            with: touch.estimationUpdateIndex!)
+                }
             }
         }
 
         if let predictedTouches = event.predictedTouches(for: trackingData.touch) {
             for touch in predictedTouches {
                 if let sample = SamplePoint(for: touch, in: view!) {
+                    // all estimated touches are temporary so we don't keep
+                    // track of estimated properties
                     trackingData.action.add(predicted: sample)
                 }
             }
@@ -156,7 +167,27 @@ class ActionGestureRecognizer: UIGestureRecognizer {
 
     override func touchesEstimatedPropertiesUpdated(_ touches: Set<UITouch>) {
         print("touchesEstimatedPropertiesUpdated!")
-        // currently we don't support updating the estimated properties
+        guard trackingData != nil else {
+            return
+        }
+
+        let action = trackingData!.action
+
+        for touch in touches {
+            if !touch.estimatedPropertiesExpectingUpdates.isEmpty {
+                if let sample = SamplePoint(for: touch, in: view!) {
+                    let updateIndex = touch.estimationUpdateIndex!
+                    // should we say an update is final if there are no
+                    // remaining updates expected? or could such a touch
+                    // still receive an update
+                    if touch.estimatedProperties.isEmpty {
+                        action.update(final: sample, with: updateIndex)
+                    } else {
+                        action.update(estimated: sample, with: updateIndex)
+                    }
+                }
+            }
+        }
     }
 
     override func reset() {

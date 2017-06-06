@@ -17,6 +17,7 @@
 		036ECA911EC0F0B20071AC02 /* DrawingCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036ECA901EC0F0B20071AC02 /* DrawingCanvasView.swift */; };
 		036ECA931EC0F0C30071AC02 /* Canvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036ECA921EC0F0C30071AC02 /* Canvas.swift */; };
 		0376B2331EE106DD007BFC1A /* ActionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0376B2321EE106DD007BFC1A /* ActionGestureRecognizer.swift */; };
+		03DAEA251EE691FE00F6EF91 /* Sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03DAEA241EE691FE00F6EF91 /* Sample.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		036ECA901EC0F0B20071AC02 /* DrawingCanvasView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingCanvasView.swift; sourceTree = "<group>"; };
 		036ECA921EC0F0C30071AC02 /* Canvas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Canvas.swift; sourceTree = "<group>"; };
 		0376B2321EE106DD007BFC1A /* ActionGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionGestureRecognizer.swift; sourceTree = "<group>"; };
+		03DAEA241EE691FE00F6EF91 /* Sample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sample.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +89,7 @@
 			children = (
 				033EAE3B1EBF9F0A000F4053 /* AppDelegate.swift */,
 				036ECA8E1EC0F03F0071AC02 /* Action.swift */,
+				03DAEA241EE691FE00F6EF91 /* Sample.swift */,
 				033EAE3D1EBF9F0A000F4053 /* ViewController.swift */,
 				036ECA901EC0F0B20071AC02 /* DrawingCanvasView.swift */,
 				0376B2321EE106DD007BFC1A /* ActionGestureRecognizer.swift */,
@@ -217,6 +220,7 @@
 				036ECA8F1EC0F03F0071AC02 /* Action.swift in Sources */,
 				036ECA931EC0F0C30071AC02 /* Canvas.swift in Sources */,
 				033EAE3C1EBF9F0A000F4053 /* AppDelegate.swift in Sources */,
+				03DAEA251EE691FE00F6EF91 /* Sample.swift in Sources */,
 				0376B2331EE106DD007BFC1A /* ActionGestureRecognizer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
