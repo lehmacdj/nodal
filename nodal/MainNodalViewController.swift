@@ -12,7 +12,10 @@ class MainNodalViewController: UIViewController {
 
     let canvas = CompleteCanvas()
 
-    @IBOutlet weak var canvasView: DrawingCanvasView!
+    var transform = CGAffineTransform()
+    var inverseTransform = CGAffineTransform()
+
+    @IBOutlet weak var canvasView: CanvasView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,14 +30,14 @@ class MainNodalViewController: UIViewController {
         switch recognizer.state {
         case .began,
              .changed:
-            if let representation = recognizer.action as? Representable? {
-                canvasView.temporaryElement = representation
+            if let drawer = recognizer.action?.intermediate() {
+                canvasView.temporaryElement = drawer
             }
         case .ended:
-            if let res = recognizer.action?.finish() {
+            if let res = recognizer.action?.finish(with: transform) {
                 canvas.add(element: res)
                 canvasView.temporaryElement = nil
-                canvasView.add(element: res)
+                canvasView.add(element: res.createDrawer(with: inverseTransform))
             }
         default:
             print("something broke, we are in an unexpected state")

@@ -14,7 +14,7 @@
 		033EAE461EBF9F0A000F4053 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 033EAE441EBF9F0A000F4053 /* LaunchScreen.storyboard */; };
 		033EAE511EBF9F0A000F4053 /* nodalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033EAE501EBF9F0A000F4053 /* nodalTests.swift */; };
 		036ECA8F1EC0F03F0071AC02 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036ECA8E1EC0F03F0071AC02 /* Action.swift */; };
-		036ECA911EC0F0B20071AC02 /* DrawingCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036ECA901EC0F0B20071AC02 /* DrawingCanvasView.swift */; };
+		036ECA911EC0F0B20071AC02 /* CanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036ECA901EC0F0B20071AC02 /* CanvasView.swift */; };
 		036ECA931EC0F0C30071AC02 /* Canvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036ECA921EC0F0C30071AC02 /* Canvas.swift */; };
 		0376B2331EE106DD007BFC1A /* ActionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0376B2321EE106DD007BFC1A /* ActionGestureRecognizer.swift */; };
 		03DAEA251EE691FE00F6EF91 /* Sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03DAEA241EE691FE00F6EF91 /* Sample.swift */; };
@@ -42,7 +42,7 @@
 		033EAE501EBF9F0A000F4053 /* nodalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = nodalTests.swift; sourceTree = "<group>"; };
 		033EAE521EBF9F0A000F4053 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		036ECA8E1EC0F03F0071AC02 /* Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
-		036ECA901EC0F0B20071AC02 /* DrawingCanvasView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingCanvasView.swift; sourceTree = "<group>"; };
+		036ECA901EC0F0B20071AC02 /* CanvasView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasView.swift; sourceTree = "<group>"; };
 		036ECA921EC0F0C30071AC02 /* Canvas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Canvas.swift; sourceTree = "<group>"; };
 		0376B2321EE106DD007BFC1A /* ActionGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionGestureRecognizer.swift; sourceTree = "<group>"; };
 		03DAEA241EE691FE00F6EF91 /* Sample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sample.swift; sourceTree = "<group>"; };
@@ -90,14 +90,14 @@
 				033EAE3B1EBF9F0A000F4053 /* AppDelegate.swift */,
 				036ECA8E1EC0F03F0071AC02 /* Action.swift */,
 				03DAEA241EE691FE00F6EF91 /* Sample.swift */,
+				036ECA921EC0F0C30071AC02 /* Canvas.swift */,
 				033EAE3D1EBF9F0A000F4053 /* MainNodalViewController.swift */,
-				036ECA901EC0F0B20071AC02 /* DrawingCanvasView.swift */,
+				036ECA901EC0F0B20071AC02 /* CanvasView.swift */,
 				0376B2321EE106DD007BFC1A /* ActionGestureRecognizer.swift */,
 				033EAE3F1EBF9F0A000F4053 /* Main.storyboard */,
 				033EAE421EBF9F0A000F4053 /* Assets.xcassets */,
 				033EAE441EBF9F0A000F4053 /* LaunchScreen.storyboard */,
 				033EAE471EBF9F0A000F4053 /* Info.plist */,
-				036ECA921EC0F0C30071AC02 /* Canvas.swift */,
 			);
 			path = nodal;
 			sourceTree = "<group>";
@@ -216,7 +216,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				033EAE3E1EBF9F0A000F4053 /* MainNodalViewController.swift in Sources */,
-				036ECA911EC0F0B20071AC02 /* DrawingCanvasView.swift in Sources */,
+				036ECA911EC0F0B20071AC02 /* CanvasView.swift in Sources */,
 				036ECA8F1EC0F03F0071AC02 /* Action.swift in Sources */,
 				036ECA931EC0F0C30071AC02 /* Canvas.swift in Sources */,
 				033EAE3C1EBF9F0A000F4053 /* AppDelegate.swift in Sources */,

@@ -68,36 +68,49 @@ class CanvasSlice: Canvas {
     }
 }
 
-protocol Representable {
-    var path: UIBezierPath { get }
-}
+typealias Drawer = () -> ()
 
-// an element that can be put in the canvas
-protocol CanvasElement: Representable {
-    var scale: Int { get }
+protocol CanvasElement {
+    // the bounding box for this element, in absolute coordinates
+    var bounds: CGRect { get }
+
+    // return a function that draws this element to the
+    // canvas with the scaled size of the
+    func createDrawer(with transform: CGAffineTransform) -> Drawer
 }
 
 class StraightLine: CanvasElement {
-    let scale = 0
+    let bounds: CGRect
 
     let path = UIBezierPath()
 
-    init(from s: Point, to e: Point) {
-        path.move(to: s.cgPoint)
-        path.addLine(to: e.cgPoint)
+    init(from s: CGPoint, to e: CGPoint) {
+        path.addLine(to: e)
+        bounds = path.bounds
+    }
+
+    func createDrawer(with transform: CGAffineTransform) -> Drawer {
+        let pathCopy = UIBezierPath(cgPath: path.cgPath)
+        pathCopy.apply(transform)
+        return {
+            pathCopy.stroke()
+        }
     }
 }
 
 class Path: CanvasElement {
-    let scale = 0
+    let bounds: CGRect
     let path: UIBezierPath
 
     init(_ path: UIBezierPath) {
         self.path = path
+        bounds = path.bounds
     }
-}
 
-class NullElement: CanvasElement {
-    let scale = 0
-    let path = UIBezierPath()
+    func createDrawer(with transform: CGAffineTransform) -> Drawer {
+        let pathCopy = UIBezierPath(cgPath: path.cgPath)
+        return {
+            pathCopy.stroke()
+        }
+    }
 }

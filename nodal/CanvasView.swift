@@ -1,5 +1,5 @@
 //
-//  DrawingCanvasView.swift
+//  CanvasView.swift
 //  nodal
 //
 //  Created by Devin Lehmacher on 5/8/17.
@@ -8,9 +8,9 @@
 
 import UIKit
 
-class DrawingCanvasView: UIView {
-    private var elements: [Representable] = []
-    var temporaryElement: Representable? = nil {
+class CanvasView: UIView {
+    private var elements: [Drawer] = []
+    var temporaryElement: Drawer? = nil {
         didSet {
             setNeedsDisplay()
         }
@@ -20,16 +20,17 @@ class DrawingCanvasView: UIView {
         super.init(frame: frame)
         backgroundColor = UIColor.white
         contentMode = .redraw
-        
+        layer.drawsAsynchronously = true
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         backgroundColor = UIColor.white
         contentMode = .redraw
+        layer.drawsAsynchronously = true
     }
 
-    func add(element: Representable) {
+    func add(element: @escaping Drawer) {
         elements.append(element)
         setNeedsDisplay()
     }
@@ -42,12 +43,12 @@ class DrawingCanvasView: UIView {
     override func draw(_ rect: CGRect) {
         if let t = temporaryElement {
             UIColor.blue.set()
-            t.path.stroke()
+            t()
         }
 
+        UIColor.black.set()
         for e in elements {
-            UIColor.black.set()
-            e.path.stroke()
+            e()
         }
     }
 }

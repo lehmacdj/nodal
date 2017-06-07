@@ -83,14 +83,11 @@ class ActionGestureRecognizer: UIGestureRecognizer {
 
         for touch in event.coalescedTouches(for: trackingData.touch)! {
             if let sample = SamplePoint(for: touch, in: view!) {
-                // should we consider a sample final if it
-                // still has estimated data but it's properties have
-                // not yet been updated?
-                if touch.estimatedProperties.isEmpty {
+                if touch.estimatedPropertiesExpectingUpdates.isEmpty {
                     trackingData.action.add(sample: sample)
                 } else {
                     trackingData.action.add(estimated: sample,
-                                            // there are estimated properties
+                                            // there are estimated properties?
                                             with: touch.estimationUpdateIndex!)
                 }
             }
@@ -174,17 +171,18 @@ class ActionGestureRecognizer: UIGestureRecognizer {
         let action = trackingData!.action
 
         for touch in touches {
-            if !touch.estimatedPropertiesExpectingUpdates.isEmpty {
-                if let sample = SamplePoint(for: touch, in: view!) {
-                    let updateIndex = touch.estimationUpdateIndex!
-                    // should we say an update is final if there are no
-                    // remaining updates expected? or could such a touch
-                    // still receive an update
-                    if touch.estimatedProperties.isEmpty {
-                        action.update(final: sample, with: updateIndex)
-                    } else {
-                        action.update(estimated: sample, with: updateIndex)
-                    }
+            // optimization oportunity, store the touches that needed updates
+            // and make sure that this is one of them before constructing a
+            // new SamplePoint
+            if let sample = SamplePoint(for: touch, in: view!) {
+                let updateIndex = touch.estimationUpdateIndex!
+                // should we say an update is final if there are no
+                // remaining updates expected? or could such a touch
+                // still receive an update
+                if touch.estimatedProperties.isEmpty {
+                    action.update(final: sample, with: updateIndex)
+                } else {
+                    action.update(estimated: sample, with: updateIndex)
                 }
             }
         }

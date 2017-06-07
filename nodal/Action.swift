@@ -23,7 +23,13 @@ protocol Action {
     func update(estimated sample: SamplePoint, with id: NSNumber)
     func update(final sample: SamplePoint, with id: NSNumber)
 
-    func finish() -> CanvasElement?
+    // creeate a drawer that draws the action in the same
+    // coordinate system as the original touches
+    func intermediate() -> Drawer?
+
+    // transform this action into an element in a certain
+    // view of the total grid
+    func finish(with transform: CGAffineTransform) -> CanvasElement?
 }
 
 // implements a default for Action's that do not need to use predicted
@@ -41,6 +47,11 @@ extension SimpleAction {
     }
     func update(estimated sample: SamplePoint, with id: NSNumber) {}
     func update(final sample: SamplePoint, with id: NSNumber) {}
+
+    func intermediate() -> Drawer? {
+        let unitTransform = CGAffineTransform()
+        return finish(with: unitTransform)?.createDrawer(with: unitTransform)
+    }
 }
 
 
@@ -55,12 +66,11 @@ class DrawStraightLine: SimpleAction {
             secondPoint = sample.location
         }
     }
-
-    func finish() -> CanvasElement? {
+    
+    func finish(with transform: CGAffineTransform) -> CanvasElement? {
         if let first = firstPoint, let second = secondPoint {
-            let p1 = Point(x: Double(first.x), y: Double(first.y))
-            let p2 = Point(x: Double(second.x), y: Double(second.y))
-            let line = StraightLine(from: p1, to: p2)
+            let line = StraightLine(from: first.applying(transform),
+                                    to: second.applying(transform))
             return line
         } else {
             return nil
@@ -68,22 +78,8 @@ class DrawStraightLine: SimpleAction {
     }
 }
 
-extension DrawStraightLine: Representable {
-    var path: UIBezierPath {
-        get {
-            if let first = firstPoint, let second = secondPoint {
-                let path = UIBezierPath()
-                path.move(to: first)
-                path.addLine(to: second)
-                return path
-            } else {
-                return UIBezierPath()
-            }
-        }
-    }
-}
-
 class DrawPrimitiveLine: SimpleAction {
+    var firstPoint: CGPoint?
     var backingPath: UIBezierPath? = nil
 
     var path: UIBezierPath {
@@ -103,7 +99,7 @@ class DrawPrimitiveLine: SimpleAction {
         }
     }
 
-    func finish() -> CanvasElement? {
+    func finish(with transform: CGAffineTransform) -> CanvasElement? {
         if let path = backingPath {
             return Path(path)
         } else {
@@ -112,11 +108,9 @@ class DrawPrimitiveLine: SimpleAction {
     }
 }
 
-extension DrawPrimitiveLine: Representable {}
-
 // a simple class that returns a basis for strokes that draw different kinds
 // of lines based on a sequence of points
-// subclasses should override finish to produce the correct canvas element
+// subclasses should override asElement to produce the correct final (and intermediate results)
 class BuildStroke: Action {
     var points = [SamplePoint]()
 
@@ -155,8 +149,13 @@ class BuildStroke: Action {
             estimationMap.removeValue(forKey: id)
         }
     }
+    
+    func intermediate() -> Drawer? {
+        let unitTransform = CGAffineTransform()
+        return finish(with: unitTransform)?.createDrawer(with: unitTransform)
+    }
 
-    func finish() -> CanvasElement? {
+    func finish(with transform: CGAffineTransform) -> CanvasElement? {
         return nil
     }
 }
