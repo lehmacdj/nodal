@@ -10,7 +10,7 @@ import UIKit
 import UIKit.UIGestureRecognizerSubclass
 
 // the distance to ignore other touches within
-let IGNORE_DIST = 0.003
+let IGNORE_DIST = CGFloat(0.003)
 let CANCELATION_INTERVAL = TimeInterval(0.1)
 
 // recognizes Actions
@@ -43,6 +43,7 @@ class ActionGestureRecognizer: UIGestureRecognizer {
         let action: Action
         let start: TimeInterval
         let touch: UITouch
+        var lastLocation: CGPoint
     }
 
     // the initial touch that is now being tracked by this recognizer
@@ -78,7 +79,8 @@ class ActionGestureRecognizer: UIGestureRecognizer {
         }
 
         for touch in event.coalescedTouches(for: trackingData.touch)! {
-            if let sample = SamplePoint(for: touch, in: view!) {
+            if let sample = SamplePoint(for: touch, in: view!, prev: trackingData.lastLocation) {
+                self.trackingData!.lastLocation = sample.location
                 if touch.estimatedPropertiesExpectingUpdates.isEmpty {
                     trackingData.action.add(sample: sample)
                 } else {
@@ -112,7 +114,8 @@ class ActionGestureRecognizer: UIGestureRecognizer {
         if let firstTouch = touches.first {
             trackingData = TrackingData(action: actionProvider(),
                                         start: firstTouch.timestamp,
-                                        touch: firstTouch)
+                                        touch: firstTouch,
+                                        lastLocation: firstTouch.location(in: view!))
 
             if touchType != .pencil {
                 print("begining timer!")

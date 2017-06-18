@@ -53,7 +53,11 @@ extension CGVector {
 
     // the magnitude of the vector
     var magnitude: CGFloat {
-        return sqrt(pow(dx, 2) + pow(dy, 2))
+        return sqrt(quadrance)
+    }
+
+    var quadrance: CGFloat {
+        return dx * dx + dy * dy
     }
 
     // initalize a vector from polar coordinates
