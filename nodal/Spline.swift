@@ -32,7 +32,7 @@ class Spline {
             UIColor.red.set()
             pathR.stroke()
         }
-        
+
         let path = UIBezierPath()
         var first = true
         for p in points {
@@ -43,9 +43,9 @@ class Spline {
                 path.addLine(to: p.location)
             }
         }
-        
+
         UIColor.green.set()
-        path.lineWidth = 4
+        path.lineWidth = 1
         path.stroke()
         UIColor.black.set()
     }
@@ -77,7 +77,6 @@ struct SplinePointIterator: IteratorProtocol {
         let neighbors: Neighbors
         if inBounds(index - 1) && inBounds(index + 1) {
             neighbors = .middle(spline.points[index - 1], spline.points[index + 1])
-            print("there are two!")
         } else if inBounds(index - 1) {
             neighbors = .end(spline.points[index - 1])
         } else if inBounds(index + 1) {
@@ -110,22 +109,27 @@ struct SplinePoint {
         let dleft: CGVector
         switch neighbors {
         case .single:
+            print("single")
             dleft = CGVector(magnitude: width, angle: 0)
         case .start(let p):
+            print("start")
             dleft = width * CGVector(from: point.location, to: p.location).perpendicular().intoUnit()
         case .end(let p):
+            print("end")
             dleft = -width * CGVector(from: point.location, to: p.location).perpendicular().intoUnit()
         case .middle(let first, let second):
+            print("middle")
             let prev = CGVector(from: first.location, to: point.location)
             let next = CGVector(from: point.location, to: second.location)
             // points that are to the left are less than a 180˚ turn
             let isLeft = next.heading(relativeTo: prev) < CGFloat.pi
             if isLeft {
-                dleft = width * CGVector.mean(prev.intoUnit(), next.intoUnit()).perpendicular()
+                dleft = width * CGVector.mean(prev, next).perpendicular().intoUnit()
             } else {
-                dleft = -width * CGVector.mean(prev.intoUnit(), next.intoUnit()).perpendicular()
+                dleft = -width * CGVector.mean(prev, next).perpendicular().intoUnit()
             }
         }
+
         let bounds = (point.location + dleft, point.location - dleft)
         print("bounding points!: ", bounds)
         return bounds

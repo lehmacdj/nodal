@@ -21,7 +21,7 @@ class MainNodalViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         let rec = ActionGestureRecognizer(target: self, action: #selector(actionEventRecieved(_:)))
-        rec.touchType = .finger
+        rec.touchType = .pencil
         canvasView.addGestureRecognizer(rec)
         print("loaded!")
     }
