@@ -11,14 +11,16 @@ import UIKit
 // core datatype for representing any kind of drawn line
 class Spline {
     var points: [SamplePoint]
-    var width: CGFloat
 
-    init(points: [SamplePoint], width: CGFloat) {
-        self.points = points
-        self.width = width
+    convenience init() {
+        self.init(points: [])
     }
 
-    func draw() {
+    init(points: [SamplePoint]) {
+        self.points = points
+    }
+
+    func draw(_ rect: CGRect) {
         for sp in self {
             let (left, right) = sp.boundingPoints()
             let pathL = UIBezierPath()
@@ -64,7 +66,7 @@ struct SplinePointIterator: IteratorProtocol {
     init(_ spline: Spline) {
         self.spline = spline
     }
-    
+
     func inBounds(_ index: Int) -> Bool {
         return index >= 0
             && index < spline.points.count
@@ -87,8 +89,7 @@ struct SplinePointIterator: IteratorProtocol {
 
         index += 1
         return SplinePoint(point: point,
-                           neighbors: neighbors,
-                           width: spline.width)
+                           neighbors: neighbors)
     }
 }
 
@@ -103,35 +104,37 @@ enum Neighbors {
 struct SplinePoint {
     let point: SamplePoint
     let neighbors: Neighbors
-    let width: CGFloat
 
-    func boundingPoints() -> (CGPoint, CGPoint) {
+    var location: CGPoint {
+        return point.location
+    }
+
+    func boundingDirections() -> (CGVector, CGVector) {
         let dleft: CGVector
         switch neighbors {
         case .single:
-            print("single")
-            dleft = CGVector(magnitude: width, angle: 0)
+            dleft = CGVector(magnitude: 1, angle: 0)
         case .start(let p):
-            print("start")
-            dleft = width * CGVector(from: point.location, to: p.location).perpendicular().intoUnit()
+            dleft = CGVector(from: point.location, to: p.location).perpendicular().intoUnit()
         case .end(let p):
-            print("end")
-            dleft = -width * CGVector(from: point.location, to: p.location).perpendicular().intoUnit()
+            dleft = -1 * CGVector(from: point.location, to: p.location).perpendicular().intoUnit()
         case .middle(let first, let second):
-            print("middle")
             let prev = CGVector(from: first.location, to: point.location)
             let next = CGVector(from: point.location, to: second.location)
             // points that are to the left are less than a 180˚ turn
             let isLeft = next.heading(relativeTo: prev) < CGFloat.pi
             if isLeft {
-                dleft = width * CGVector.mean(prev, next).perpendicular().intoUnit()
+                dleft = CGVector.mean(prev, next).perpendicular().intoUnit()
             } else {
-                dleft = -width * CGVector.mean(prev, next).perpendicular().intoUnit()
+                dleft = -1 * CGVector.mean(prev, next).perpendicular().intoUnit()
             }
         }
 
-        let bounds = (point.location + dleft, point.location - dleft)
-        print("bounding points!: ", bounds)
-        return bounds
+        return (dleft, -1 * dleft)
+    }
+
+    func boundingPoints() -> (CGPoint, CGPoint) {
+        let (dleft, dright) = self.boundingDirections()
+        return (self.location + dleft, self.location + dright)
     }
 }

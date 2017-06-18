@@ -105,7 +105,6 @@ class ActionGestureRecognizer: UIGestureRecognizer {
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("touchesBegan!")
         guard trackingData == nil else {
             print("non-nil trackingData", trackingData!)
             return
@@ -139,7 +138,6 @@ class ActionGestureRecognizer: UIGestureRecognizer {
     }
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("touchesMoved!")
         if collect(touches: touches, event: event) {
             if state == .began {
                 state = .changed
@@ -148,21 +146,18 @@ class ActionGestureRecognizer: UIGestureRecognizer {
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("touchesEnded!")
         if collect(touches: touches, event:event) {
             state = .ended
         }
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("touchesCancelled!")
         if collect(touches: touches, event: event) {
             state = .failed
         }
     }
 
     override func touchesEstimatedPropertiesUpdated(_ touches: Set<UITouch>) {
-        print("touchesEstimatedPropertiesUpdated!")
         guard let action = trackingData?.action else {
             return
         }

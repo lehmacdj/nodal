@@ -68,7 +68,7 @@ class CanvasSlice: Canvas {
     }
 }
 
-typealias Drawer = () -> ()
+typealias Drawer = (_ rect: CGRect) -> ()
 
 protocol CanvasElement {
     // the bounding box for this element, in absolute coordinates
@@ -92,7 +92,7 @@ class StraightLine: CanvasElement {
     func createDrawer(with transform: CGAffineTransform) -> Drawer {
         let pathCopy = UIBezierPath(cgPath: path.cgPath)
         pathCopy.apply(transform)
-        return {
+        return { rect in
             pathCopy.stroke()
         }
     }
@@ -110,7 +110,7 @@ class Path: CanvasElement {
     func createDrawer(with transform: CGAffineTransform) -> Drawer {
         let pathCopy = UIBezierPath(cgPath: path.cgPath)
         pathCopy.apply(transform)
-        return {
+        return { rect in
             pathCopy.stroke()
         }
     }
@@ -135,11 +135,11 @@ func computeBounds(points: [SamplePoint], radius: CGFloat) -> CGRect? {
 
 class PenStroke: CanvasElement {
     let bounds: CGRect
-    let points: [SamplePoint]
+    let spline: Spline
 
-    init?(_ points: [SamplePoint]) {
-        self.points = points
-        if let bounds = computeBounds(points: points, radius: 1) {
+    init?(_ spline: Spline) {
+        self.spline = spline
+        if let bounds = computeBounds(points: spline.points, radius: 1) {
             self.bounds = bounds
         } else {
             return nil
@@ -147,9 +147,32 @@ class PenStroke: CanvasElement {
     }
 
     func createDrawer(with transform: CGAffineTransform) -> Drawer {
-        let spline = Spline(points: points, width: 30)
-        return {
-            spline.draw()
+        return { rect in
+            let leftPath = UIBezierPath()
+            let rightPath = UIBezierPath()
+
+            // compute a point to start at
+            guard let first = self.spline.points.first?.location else {
+                return
+            }
+            
+            leftPath.move(to: first)
+            rightPath.move(to: first)
+
+            for point in self.spline {
+                let (left, right) = point.boundingDirections()
+                leftPath.addLine(to: point.location + 10 * left)
+                rightPath.addLine(to: point.location + 10 * right)
+            }
+
+            if let last = self.spline.points.last?.location {
+                leftPath.addLine(to: last)
+                rightPath.addLine(to: last)
+            }
+
+            let path = leftPath.reversing()
+            path.append(rightPath)
+            path.fill()
         }
     }
 }

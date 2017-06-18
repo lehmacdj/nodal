@@ -111,8 +111,8 @@ class DrawPrimitiveLine: SimpleAction {
 // a simple class that returns a basis for strokes that draw different kinds
 // of lines based on a sequence of points
 // subclasses should override asElement to produce the correct final (and intermediate results)
-class BuildStroke: Action {
-    var points = [SamplePoint]()
+class SplineBuilder: Action {
+    var spline = Spline()
 
     // map index to the index in `points` that contains the data for the corresponding UITouch
     var estimationMap = [NSNumber:Int]()
@@ -120,7 +120,7 @@ class BuildStroke: Action {
     var predictedPoints = [SamplePoint]()
 
     func add(sample: SamplePoint) {
-        points.append(sample)
+        spline.points.append(sample)
     }
 
     func add(predicted sample: SamplePoint) {
@@ -132,20 +132,20 @@ class BuildStroke: Action {
     }
 
     func add(estimated sample: SamplePoint, with id: NSNumber) {
-        let index = points.count
-        points.append(sample)
+        let index = spline.points.count
+        spline.points.append(sample)
         estimationMap[id] = index
     }
 
     func update(estimated sample: SamplePoint, with id: NSNumber) {
         if let index = estimationMap[id] {
-            points[index] = sample
+            spline.points[index] = sample
         }
     }
 
     func update(final sample: SamplePoint, with id: NSNumber) {
         if let index = estimationMap[id] {
-            points[index] = sample
+            spline.points[index] = sample
             estimationMap.removeValue(forKey: id)
         }
     }
@@ -160,16 +160,17 @@ class BuildStroke: Action {
     }
 }
 
-class BroadLine: BuildStroke {
+class BroadLine: SplineBuilder {
     override func finish(with transform: CGAffineTransform) -> CanvasElement? {
-        guard points.count > 0 else {
+        guard spline.points.count > 0 else {
             return nil
         }
-        
-        return PenStroke(points)
+
+        return PenStroke(spline)
     }
 }
 
+// an action that intentionally undersamples from the gesture recognizer
 class SlowAction: Action {
     var below: Action
     var touches = 0
