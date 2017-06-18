@@ -109,8 +109,47 @@ class Path: CanvasElement {
 
     func createDrawer(with transform: CGAffineTransform) -> Drawer {
         let pathCopy = UIBezierPath(cgPath: path.cgPath)
+        pathCopy.apply(transform)
         return {
             pathCopy.stroke()
+        }
+    }
+}
+
+func computeBounds(points: [SamplePoint], radius: CGFloat) -> CGRect? {
+    let comparePoints: (SamplePoint, SamplePoint) -> Bool = { (p1, p2) in
+        p1.location.x > p2.location.x || p1.location.y > p2.location.y }
+    if let min = points.min(by: comparePoints),
+       let max = points.max(by: comparePoints) {
+        let dpoint = CGVector(dx: radius, dy: radius)
+        let minBound = min.location - dpoint
+        let maxBound = max.location + dpoint
+        let dBoundX = maxBound.x - minBound.y
+        let dBoundY = maxBound.y - minBound.y
+        let size = CGSize(width: dBoundX, height: dBoundY)
+        return CGRect(origin: minBound, size: size)
+    }
+
+    return nil
+}
+
+class PenStroke: CanvasElement {
+    let bounds: CGRect
+    let points: [SamplePoint]
+
+    init?(_ points: [SamplePoint]) {
+        self.points = points
+        if let bounds = computeBounds(points: points, radius: 1) {
+            self.bounds = bounds
+        } else {
+            return nil
+        }
+    }
+
+    func createDrawer(with transform: CGAffineTransform) -> Drawer {
+        let spline = Spline(points: points, width: 30)
+        return {
+            spline.draw()
         }
     }
 }

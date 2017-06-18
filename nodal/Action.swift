@@ -149,7 +149,7 @@ class BuildStroke: Action {
             estimationMap.removeValue(forKey: id)
         }
     }
-    
+
     func intermediate() -> Drawer? {
         let unitTransform = CGAffineTransform()
         return finish(with: unitTransform)?.createDrawer(with: unitTransform)
@@ -157,5 +157,78 @@ class BuildStroke: Action {
 
     func finish(with transform: CGAffineTransform) -> CanvasElement? {
         return nil
+    }
+}
+
+class BroadLine: BuildStroke {
+    override func finish(with transform: CGAffineTransform) -> CanvasElement? {
+        guard points.count > 0 else {
+            return nil
+        }
+        
+        return PenStroke(points)
+    }
+}
+
+class SlowAction: Action {
+    var below: Action
+    var touches = 0
+    var touchesPredicted = 0
+    var registered = Set<NSNumber>()
+    let interval: Int
+
+    convenience init(below action: Action) {
+        self.init(below: action, interval: 20)
+    }
+    
+    init(below action: Action, interval: Int) {
+        below = action
+        self.interval = interval
+    }
+    
+    func add(sample: SamplePoint) {
+        if touches % interval == 0 {
+            below.add(sample: sample)
+        }
+        touches += 1
+    }
+
+    func add(predicted sample: SamplePoint) {
+        if touchesPredicted % interval == 0 {
+            below.add(predicted: sample)
+        }
+        touchesPredicted += 1
+    }
+
+    func add(estimated sample: SamplePoint, with id: NSNumber) {
+        if touches % interval == 0 {
+            registered.insert(id)
+            below.add(estimated: sample, with: id)
+        }
+        touches += 1
+    }
+
+    func clearPredicted() {
+        below.clearPredicted()
+    }
+
+    func update(estimated sample: SamplePoint, with id: NSNumber) {
+        if registered.contains(id) {
+            below.update(estimated: sample, with: id)
+        }
+    }
+    
+    func update(final sample: SamplePoint, with id: NSNumber) {
+        if registered.contains(id) {
+            below.update(final: sample, with: id)
+        }
+    }
+
+    func intermediate() -> Drawer? {
+        return below.intermediate()
+    }
+
+    func finish(with transform: CGAffineTransform) -> CanvasElement? {
+        return below.finish(with: transform)
     }
 }

@@ -16,7 +16,7 @@ let CANCELATION_INTERVAL = TimeInterval(0.1)
 // recognizes Actions
 class ActionGestureRecognizer: UIGestureRecognizer {
     // the action to perform on touches
-    public var actionProvider: ActionProvider = { DrawPrimitiveLine() }
+    public var actionProvider: ActionProvider = { SlowAction(below: BroadLine(), interval: 1) }
 
     public var action: Action? {
         return trackingData?.action
@@ -53,11 +53,9 @@ class ActionGestureRecognizer: UIGestureRecognizer {
 
     // add a touch to the current action if it exists
     private func collect(touches: Set<UITouch>, event: UIEvent?) -> Bool {
-        guard self.trackingData != nil else {
+        guard let trackingData = self.trackingData else {
             return false
         }
-
-        let trackingData = self.trackingData!
 
         guard touches.contains(trackingData.touch) else {
             return false
@@ -75,11 +73,9 @@ class ActionGestureRecognizer: UIGestureRecognizer {
             }
         }
 
-        guard event != nil else {
+        guard let event = event else {
             return true
         }
-
-        let event = event!
 
         for touch in event.coalescedTouches(for: trackingData.touch)! {
             if let sample = SamplePoint(for: touch, in: view!) {
@@ -164,11 +160,9 @@ class ActionGestureRecognizer: UIGestureRecognizer {
 
     override func touchesEstimatedPropertiesUpdated(_ touches: Set<UITouch>) {
         print("touchesEstimatedPropertiesUpdated!")
-        guard trackingData != nil else {
+        guard let action = trackingData?.action else {
             return
         }
-
-        let action = trackingData!.action
 
         for touch in touches {
             // optimization oportunity, store the touches that needed updates
