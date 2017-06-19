@@ -15,24 +15,21 @@ class MainNodalViewController: UIViewController {
     var transform = CGAffineTransform()
     var inverseTransform = CGAffineTransform()
 
-    var canvasView: CanvasView!
+    let canvasView: CanvasView = {
+        let canvasView = CanvasView()
+        canvasView.backgroundColor = .white
+        canvasView.translatesAutoresizingMaskIntoConstraints = false
+        return canvasView
+    }()
 
     override func loadView() {
         super.loadView()
-        view.backgroundColor = UIColor.white
-        view.isUserInteractionEnabled = true
-        view.translatesAutoresizingMaskIntoConstraints = false
 
-        let canvasView = CanvasView()
-        canvasView.isUserInteractionEnabled = true
-        canvasView.backgroundColor = UIColor.white
-        canvasView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(canvasView)
         canvasView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         canvasView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         canvasView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         canvasView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        self.canvasView = canvasView
 
         let recFinger = ActionGestureRecognizer(target: self, action: #selector(actionEventRecieved(_:)))
         recFinger.touchType = .finger
