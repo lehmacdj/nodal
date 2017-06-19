@@ -34,10 +34,13 @@ class MainNodalViewController: UIViewController {
         canvasView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         self.canvasView = canvasView
 
-        let rec = ActionGestureRecognizer(target: self, action: #selector(actionEventRecieved(_:)))
-        rec.cancelsTouchesInView = false
-        rec.touchType = .finger
-        canvasView.addGestureRecognizer(rec)
+        let recFinger = ActionGestureRecognizer(target: self, action: #selector(actionEventRecieved(_:)))
+        recFinger.touchType = .finger
+        canvasView.addGestureRecognizer(recFinger)
+
+        let recPencil = ActionGestureRecognizer(target: self, action: #selector(actionEventRecieved(_:)))
+        recPencil.touchType = .pencil
+        canvasView.addGestureRecognizer(recPencil)
     }
 
     override func viewDidLoad() {
