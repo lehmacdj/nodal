@@ -33,15 +33,15 @@ class MainNodalViewController: UIViewController {
         canvasView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         canvasView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         self.canvasView = canvasView
-    }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         let rec = ActionGestureRecognizer(target: self, action: #selector(actionEventRecieved(_:)))
         rec.cancelsTouchesInView = false
         rec.touchType = .finger
         canvasView.addGestureRecognizer(rec)
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
         print("loaded!")
     }
 
