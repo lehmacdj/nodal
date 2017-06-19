@@ -105,7 +105,6 @@ class ActionGestureRecognizer: UIGestureRecognizer {
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("got a touch!")
         guard trackingData == nil else {
             print("non-nil trackingData", trackingData!)
             return
@@ -118,12 +117,10 @@ class ActionGestureRecognizer: UIGestureRecognizer {
                                         lastLocation: firstTouch.location(in: view!))
 
             if touchType != .pencil {
-                print("begining timer!")
                 startTimer = Timer.scheduledTimer(
                     withTimeInterval: CANCELATION_INTERVAL,
                     repeats: false,
                     block: { timer in
-                        print("timer fired!")
                         if self.state == .possible {
                             self.state = .began
                         }
@@ -182,7 +179,6 @@ class ActionGestureRecognizer: UIGestureRecognizer {
     }
 
     override func reset() {
-        print("reset!")
         trackingData = nil
         if let timer = startTimer {
             timer.invalidate()
