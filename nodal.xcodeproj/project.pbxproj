@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		033788EE1EF85485007E0C80 /* ToolSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033788ED1EF85485007E0C80 /* ToolSelectorView.swift */; };
+		033788F01EF854C8007E0C80 /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033788EF1EF854C8007E0C80 /* BaseView.swift */; };
 		033EAE3C1EBF9F0A000F4053 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033EAE3B1EBF9F0A000F4053 /* AppDelegate.swift */; };
 		033EAE3E1EBF9F0A000F4053 /* MainNodalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033EAE3D1EBF9F0A000F4053 /* MainNodalViewController.swift */; };
 		033EAE431EBF9F0A000F4053 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 033EAE421EBF9F0A000F4053 /* Assets.xcassets */; };
@@ -32,6 +34,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		033788ED1EF85485007E0C80 /* ToolSelectorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolSelectorView.swift; sourceTree = "<group>"; };
+		033788EF1EF854C8007E0C80 /* BaseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
 		033EAE381EBF9F0A000F4053 /* nodal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nodal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		033EAE3B1EBF9F0A000F4053 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		033EAE3D1EBF9F0A000F4053 /* MainNodalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNodalViewController.swift; sourceTree = "<group>"; };
@@ -96,6 +100,8 @@
 				036ECA921EC0F0C30071AC02 /* Canvas.swift */,
 				035C9C621EF0DAFB00E2C515 /* Spline.swift */,
 				033EAE3D1EBF9F0A000F4053 /* MainNodalViewController.swift */,
+				033788ED1EF85485007E0C80 /* ToolSelectorView.swift */,
+				033788EF1EF854C8007E0C80 /* BaseView.swift */,
 				036ECA901EC0F0B20071AC02 /* CanvasView.swift */,
 				0376B2321EE106DD007BFC1A /* ActionGestureRecognizer.swift */,
 				033EAE421EBF9F0A000F4053 /* Assets.xcassets */,
@@ -220,11 +226,13 @@
 				035C9C631EF0DAFB00E2C515 /* Spline.swift in Sources */,
 				033EAE3E1EBF9F0A000F4053 /* MainNodalViewController.swift in Sources */,
 				036ECA911EC0F0B20071AC02 /* CanvasView.swift in Sources */,
+				033788EE1EF85485007E0C80 /* ToolSelectorView.swift in Sources */,
 				036ECA8F1EC0F03F0071AC02 /* Action.swift in Sources */,
 				036ECA931EC0F0C30071AC02 /* Canvas.swift in Sources */,
 				033EAE3C1EBF9F0A000F4053 /* AppDelegate.swift in Sources */,
 				03DAEA251EE691FE00F6EF91 /* Sample.swift in Sources */,
 				0376B2331EE106DD007BFC1A /* ActionGestureRecognizer.swift in Sources */,
+				033788F01EF854C8007E0C80 /* BaseView.swift in Sources */,
 				035C9C611EE9D57100E2C515 /* CGMathExt.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

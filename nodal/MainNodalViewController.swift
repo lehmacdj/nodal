@@ -15,12 +15,7 @@ class MainNodalViewController: UIViewController {
     var transform = CGAffineTransform()
     var inverseTransform = CGAffineTransform()
 
-    let canvasView: CanvasView = {
-        let canvasView = CanvasView()
-        canvasView.backgroundColor = .white
-        canvasView.translatesAutoresizingMaskIntoConstraints = false
-        return canvasView
-    }()
+    let canvasView = CanvasView()
 
     override func loadView() {
         super.loadView()

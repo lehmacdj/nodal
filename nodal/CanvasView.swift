@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CanvasView: UIView {
+class CanvasView: BaseView {
     private var elements: [Drawer] = []
     var temporaryElement: Drawer? = nil {
         didSet {
@@ -16,16 +16,9 @@ class CanvasView: UIView {
         }
     }
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        backgroundColor = UIColor.white
-        contentMode = .redraw
-        layer.drawsAsynchronously = true
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        backgroundColor = UIColor.white
+    override init() {
+        super.init()
+        backgroundColor = .white
         contentMode = .redraw
         layer.drawsAsynchronously = true
     }
