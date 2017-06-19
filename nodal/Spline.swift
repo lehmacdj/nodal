@@ -20,6 +20,8 @@ class Spline {
         self.points = points
     }
 
+    // draw the spline in the rectangle 
+    // (without modifying the coordinates of any of the points)
     func draw(_ rect: CGRect) {
         for sp in self {
             let (left, right) = sp.boundingPoints()

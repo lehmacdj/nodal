@@ -15,13 +15,32 @@ class MainNodalViewController: UIViewController {
     var transform = CGAffineTransform()
     var inverseTransform = CGAffineTransform()
 
-    @IBOutlet weak var canvasView: CanvasView!
+    var canvasView: CanvasView!
+
+    override func loadView() {
+        super.loadView()
+        view.backgroundColor = UIColor.white
+        view.isUserInteractionEnabled = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+
+        let canvasView = CanvasView()
+        canvasView.isUserInteractionEnabled = true
+        canvasView.backgroundColor = UIColor.white
+        canvasView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(canvasView)
+        canvasView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        canvasView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        canvasView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        canvasView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        self.canvasView = canvasView
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         let rec = ActionGestureRecognizer(target: self, action: #selector(actionEventRecieved(_:)))
-        rec.touchType = .pencil
+        rec.cancelsTouchesInView = false
+        rec.touchType = .finger
         canvasView.addGestureRecognizer(rec)
         print("loaded!")
     }

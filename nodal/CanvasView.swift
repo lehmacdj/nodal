@@ -41,8 +41,8 @@ class CanvasView: UIView {
     }
 
     override func draw(_ rect: CGRect) {
-        UIColor.black.set()
         for e in elements {
+            UIColor.black.set()
             e(rect)
         }
 

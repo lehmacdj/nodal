@@ -105,6 +105,7 @@ class ActionGestureRecognizer: UIGestureRecognizer {
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("got a touch!")
         guard trackingData == nil else {
             print("non-nil trackingData", trackingData!)
             return
