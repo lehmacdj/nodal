@@ -79,12 +79,45 @@ protocol CanvasElement {
     func createDrawer(with transform: CGAffineTransform) -> Drawer
 }
 
+struct BezierPathStroke: CanvasElement {
+    var bounds: CGRect {
+        return path.bounds
+    }
+
+    let path: UIBezierPath
+
+    func createDrawer(with transform: CGAffineTransform) -> Drawer {
+        let pathCopy = UIBezierPath(cgPath: path.cgPath)
+        pathCopy.apply(transform)
+        return { rect in
+            pathCopy.stroke()
+        }
+    }
+}
+
+struct BeizerPathFill: CanvasElement {
+    var bounds: CGRect {
+        return path.bounds
+    }
+
+    let path: UIBezierPath
+
+    func createDrawer(with transform: CGAffineTransform) -> Drawer {
+        let pathCopy = UIBezierPath(cgPath: path.cgPath)
+        pathCopy.apply(transform)
+        return { rect in
+            pathCopy.fill()
+        }
+    }
+}
+
 class StraightLine: CanvasElement {
     let bounds: CGRect
 
     let path = UIBezierPath()
 
     init(from s: CGPoint, to e: CGPoint) {
+        path.move(to: s)
         path.addLine(to: e)
         bounds = path.bounds
     }
@@ -155,7 +188,7 @@ class PenStroke: CanvasElement {
             guard let first = self.spline.points.first?.location else {
                 return
             }
-            
+
             leftPath.move(to: first)
             rightPath.move(to: first)
 

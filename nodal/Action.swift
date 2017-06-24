@@ -14,7 +14,7 @@ protocol Action {
     func add(sample: SamplePoint)
     func add(predicted sample: SamplePoint)
     // add a sample that contains estimated data along
-    // with a number that must be able to be used to 
+    // with a number that must be able to be used to
     // correspond to it
     func add(estimated sample: SamplePoint, with id: NSNumber)
 
@@ -49,15 +49,28 @@ extension SimpleAction {
     func update(final sample: SamplePoint, with id: NSNumber) {}
 
     func intermediate() -> Drawer? {
-        let unitTransform = CGAffineTransform()
-        return finish(with: unitTransform)?.createDrawer(with: unitTransform)
+        return finish(with: CGAffineTransform.identity)?
+            .createDrawer(with: CGAffineTransform.identity)
     }
 }
 
+class BipointAction: SimpleAction {
+    typealias PathConstructor = (CGPoint, CGPoint) -> UIBezierPath
+    let pathConstructor: PathConstructor
 
-class DrawStraightLine: SimpleAction {
+    enum DrawType {
+        case stroke(CGFloat)
+        case fill
+    }
+    let drawType: DrawType
+
     var firstPoint: CGPoint? = nil
     var secondPoint: CGPoint? = nil
+
+    init(pathConstructor: @escaping PathConstructor, drawType: DrawType) {
+        self.pathConstructor = pathConstructor
+        self.drawType = drawType
+    }
 
     func add(sample: SamplePoint) {
         if firstPoint == nil {
@@ -66,17 +79,41 @@ class DrawStraightLine: SimpleAction {
             secondPoint = sample.location
         }
     }
-    
+
     func finish(with transform: CGAffineTransform) -> CanvasElement? {
         if let first = firstPoint, let second = secondPoint {
-            let line = StraightLine(from: first.applying(transform),
-                                    to: second.applying(transform))
-            return line
+            let path = pathConstructor((first, second))
+            switch drawType {
+            case .stroke(let width):
+                path.lineWidth = width
+                return BezierPathStroke(path: path)
+            case .fill:
+                return BeizerPathFill(path: path)
+            }
         } else {
             return nil
         }
     }
 }
+
+let mkDrawStraightLine = { BipointAction(pathConstructor: { (first, second) in
+                                             let path = UIBezierPath()
+                                             path.move(to: first)
+                                             path.addLine(to: second)
+                                             return path
+                                         },
+                                         drawType: .stroke(20)) }
+
+let mkDrawCircle = { BipointAction(pathConstructor: { (first, second) in
+                                       let path = UIBezierPath()
+                                       path.addArc(withCenter: first,
+                                                   radius: CGVector(from: first, to: second).magnitude,
+                                                   startAngle: 0,
+                                                   endAngle: 2 * CGFloat.pi,
+                                                   clockwise: true)
+                                       return path
+                                   },
+                                   drawType: .fill) }
 
 class DrawPrimitiveLine: SimpleAction {
     var firstPoint: CGPoint?
@@ -181,12 +218,12 @@ class SlowAction: Action {
     convenience init(below action: Action) {
         self.init(below: action, interval: 20)
     }
-    
+
     init(below action: Action, interval: Int) {
         below = action
         self.interval = interval
     }
-    
+
     func add(sample: SamplePoint) {
         if touches % interval == 0 {
             below.add(sample: sample)
@@ -218,7 +255,7 @@ class SlowAction: Action {
             below.update(estimated: sample, with: id)
         }
     }
-    
+
     func update(final sample: SamplePoint, with id: NSNumber) {
         if registered.contains(id) {
             below.update(final: sample, with: id)

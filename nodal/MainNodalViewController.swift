@@ -12,8 +12,8 @@ class MainNodalViewController: UIViewController {
 
     let canvas = CompleteCanvas()
 
-    var transform = CGAffineTransform()
-    var inverseTransform = CGAffineTransform()
+    var transform = CGAffineTransform.identity
+    var inverseTransform = CGAffineTransform.identity
 
     let canvasView = CanvasView()
 
@@ -38,6 +38,26 @@ class MainNodalViewController: UIViewController {
                  },
                  displayStyle: .text("pen"),
                  actionType: .focus),
+            Tool(action: {
+                     recFinger.actionProvider = mkDrawStraightLine
+                     recPencil.actionProvider = mkDrawStraightLine
+                 },
+                 displayStyle: .text("line"),
+                 actionType: .focus),
+            Tool(action: {
+                     recFinger.actionProvider = mkDrawCircle
+                     recPencil.actionProvider = mkDrawCircle
+                 },
+                 displayStyle: .text("circle"),
+                 actionType: .focus),
+            Tool(action: {
+                     let fp = recFinger.actionProvider
+                     let pp = recPencil.actionProvider
+                     recFinger.actionProvider = { SlowAction(below: fp()) }
+                     recPencil.actionProvider = { SlowAction(below: pp()) }
+                 },
+                 displayStyle: .text("slow"),
+                 actionType: .instant),
             Tool(action: {
                     self.canvasView.clear()
                     self.canvas.elements.removeAll()
