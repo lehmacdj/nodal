@@ -15,13 +15,20 @@ class BaseView: UIView {
         translatesAutoresizingMaskIntoConstraints = false
     }
 
-    // warning: this initializer ignores the frame as this class is
-    // intended to only be used with autolayout
-    convenience override init(frame: CGRect) {
-        self.init()
-    }
-
     convenience required init?(coder aDecoder: NSCoder) {
         fatalError("subclasses of BaseView do not support coding")
+    }
+}
+
+extension UIView {
+    // make this view have equal constraints to another view
+    func equalConstraints(to view: UIView) {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        view.translatesAutoresizingMaskIntoConstraints = false
+
+        self.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        self.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        self.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        self.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
 }

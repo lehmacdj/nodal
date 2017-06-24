@@ -21,10 +21,7 @@ class MainNodalViewController: UIViewController {
         super.loadView()
 
         view.addSubview(canvasView)
-        canvasView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        canvasView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        canvasView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        canvasView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        canvasView.equalConstraints(to: view)
 
         let recFinger = ActionGestureRecognizer(target: self, action: #selector(actionEventRecieved(_:)))
         recFinger.touchType = .finger
@@ -33,6 +30,28 @@ class MainNodalViewController: UIViewController {
         let recPencil = ActionGestureRecognizer(target: self, action: #selector(actionEventRecieved(_:)))
         recPencil.touchType = .pencil
         canvasView.addGestureRecognizer(recPencil)
+
+        let tools = [
+            Tool(action: {
+                     recFinger.actionProvider = { BroadLine() }
+                     recPencil.actionProvider = { BroadLine() }
+                 },
+                 displayStyle: .text("pen"),
+                 actionType: .focus),
+            Tool(action: {
+                    self.canvasView.clear()
+                    self.canvas.elements.removeAll()
+                 },
+                 displayStyle: .text("clear"),
+                 actionType: .instant),
+        ]
+
+        let toolbar = ToolSelectorView(tools: tools)
+        view.addSubview(toolbar)
+        toolbar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        toolbar.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        toolbar.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        toolbar.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
 
     override func viewDidLoad() {
