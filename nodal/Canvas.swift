@@ -194,8 +194,8 @@ class PenStroke: CanvasElement {
 
             for point in self.spline {
                 let (left, right) = point.boundingDirections()
-                leftPath.addLine(to: point.location + 10 * left)
-                rightPath.addLine(to: point.location + 10 * right)
+                leftPath.addLine(to: point.location + point.force * 10 * left)
+                rightPath.addLine(to: point.location + point.force * 10 * right)
             }
 
             if let last = self.spline.points.last?.location {

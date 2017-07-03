@@ -10,7 +10,7 @@ import UIKit
 import UIKit.UIGestureRecognizerSubclass
 
 // the distance to ignore other touches within
-let IGNORE_DIST = CGFloat(0.003)
+let IGNORE_DIST = CGFloat(0.03)
 let CANCELATION_INTERVAL = TimeInterval(0.1)
 
 // recognizes Actions

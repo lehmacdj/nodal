@@ -44,7 +44,7 @@ struct SamplePoint {
             return nil
         }
     }
-    
+
     init?(for touch: UITouch, in view: UIView) {
         self.location = touch.preciseLocation(in: view)
         self.timestamp = touch.timestamp
