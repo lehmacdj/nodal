@@ -9,6 +9,17 @@
 import UIKit
 
 class MainNodalViewController: UIViewController {
+    let fingerRecognizer: ActionGestureRecognizer =  {
+        let rec = ActionGestureRecognizer()
+        rec.touchType = .finger
+        return rec
+    }()
+
+    let pencilRecognizer: ActionGestureRecognizer =  {
+        let rec = ActionGestureRecognizer()
+        rec.touchType = .pencil
+        return rec
+    }()
 
     let canvas = CompleteCanvas()
 
@@ -17,48 +28,51 @@ class MainNodalViewController: UIViewController {
 
     let canvasView = CanvasView()
 
+    private func setTool(_ tt: TouchType, provider: @escaping ActionProvider) {
+        switch tt {
+        case .finger:
+            fingerRecognizer.actionProvider = provider
+        case .pencil:
+            pencilRecognizer.actionProvider = provider
+        }
+    }
+
+    private func mapTool(_ tt: TouchType, with mapper: @escaping (@escaping ActionProvider) -> ActionProvider) {
+        switch tt {
+        case .finger:
+            let prevProvider = fingerRecognizer.actionProvider
+            fingerRecognizer.actionProvider = mapper(prevProvider)
+        case .pencil:
+            let prevProvider = pencilRecognizer.actionProvider
+            pencilRecognizer.actionProvider = mapper(prevProvider)
+        }
+    }
+
     override func loadView() {
         super.loadView()
 
         view.addSubview(canvasView)
         canvasView.equalConstraints(to: view)
 
-        let recFinger = ActionGestureRecognizer(target: self, action: #selector(actionEventRecieved(_:)))
-        recFinger.touchType = .finger
-        canvasView.addGestureRecognizer(recFinger)
-
-        let recPencil = ActionGestureRecognizer(target: self, action: #selector(actionEventRecieved(_:)))
-        recPencil.touchType = .pencil
-        canvasView.addGestureRecognizer(recPencil)
+        fingerRecognizer.addTarget(self, action: #selector(actionEventRecieved(_:)))
+        pencilRecognizer.addTarget(self, action: #selector(actionEventRecieved(_:)))
+        canvasView.addGestureRecognizer(fingerRecognizer)
+        canvasView.addGestureRecognizer(pencilRecognizer)
 
         let tools = [
-            Tool(action: {
-                     recFinger.actionProvider = { BroadLine() }
-                     recPencil.actionProvider = { BroadLine() }
-                 },
+            Tool(action: { tt in self.setTool(tt, provider: { BroadLine() } ) },
                  displayStyle: .text("pen"),
                  actionType: .focus),
-            Tool(action: {
-                     recFinger.actionProvider = mkDrawStraightLine
-                     recPencil.actionProvider = mkDrawStraightLine
-                 },
+            Tool(action: { tt in self.setTool(tt, provider: mkDrawStraightLine) },
                  displayStyle: .text("line"),
                  actionType: .focus),
-            Tool(action: {
-                     recFinger.actionProvider = mkDrawCircle
-                     recPencil.actionProvider = mkDrawCircle
-                 },
+            Tool(action: { tt in self.setTool(tt, provider: mkDrawCircle) },
                  displayStyle: .text("circle"),
                  actionType: .focus),
-            Tool(action: {
-                     let fp = recFinger.actionProvider
-                     let pp = recPencil.actionProvider
-                     recFinger.actionProvider = { SlowAction(below: fp()) }
-                     recPencil.actionProvider = { SlowAction(below: pp()) }
-                 },
+            Tool(action: { tt in self.mapTool(tt, with: { prev in { SlowAction(below: prev()) } }) },
                  displayStyle: .text("slow"),
                  actionType: .instant),
-            Tool(action: {
+            Tool(action: { tt in
                     self.canvasView.clear()
                     self.canvas.elements.removeAll()
                  },

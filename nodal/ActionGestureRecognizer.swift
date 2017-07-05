@@ -22,11 +22,6 @@ class ActionGestureRecognizer: UIGestureRecognizer {
         return trackingData?.action
     }
 
-    enum TouchType {
-        case pencil
-        case finger
-    }
-
     // accepted touch types
     var touchType: TouchType = .finger {
         didSet {

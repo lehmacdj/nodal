@@ -8,8 +8,13 @@
 
 import UIKit
 
+enum TouchType {
+    case finger
+    case pencil
+}
+
 struct Tool {
-    typealias Action = () -> ()
+    typealias Action = (TouchType) -> ()
     let action:  Action
 
     enum Display {
@@ -37,10 +42,17 @@ class ToolSelectorView: BaseView {
 
     var buttons = [ToolSelectorButton]()
 
-    var selected: ToolSelectorButton? {
+    var selectedByPencil: ToolSelectorButton? {
         willSet {
-            selected?.isSelected = false
-            newValue?.isSelected = true
+            selectedByPencil?.isSelectedByPencil = false
+            newValue?.isSelectedByPencil = true
+        }
+    }
+
+    var selectedByFinger: ToolSelectorButton? {
+        willSet {
+            selectedByFinger?.isSelectedByFinger = false
+            newValue?.isSelectedByFinger = true
         }
     }
 
@@ -61,36 +73,86 @@ class ToolSelectorView: BaseView {
         }
 
         if let first = buttons.first {
-            selected = first
+            selectedByFinger = first
+            selectedByPencil = first
         }
 
         self.addSubview(stackView)
         stackView.equalConstraints(to: self)
     }
 
+    // init with empty tool array
     convenience override init() {
-        self.init(tools: [])
+        fatalError("are you sure this is what you wanted to do?")
     }
 
     func createActionFor(control: ToolSelectorButton, tool: Tool) -> Tool.Action {
-        return {
+        return { tt in
             switch tool.actionType {
             case .instant:
                 break
             case .focus:
-                self.selected = control
+                switch tt {
+                case .pencil:
+                    self.selectedByPencil = control
+                case .finger:
+                    self.selectedByFinger = control
+                }
             }
-            tool.action()
+            tool.action(tt)
         }
     }
 }
 
+fileprivate class AllowSimultaneouslyDelegate: NSObject, UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ rec: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool {
+        return true
+    }
+}
+
+fileprivate let allowSimultaneousDelegate = AllowSimultaneouslyDelegate()
 
 class ToolSelectorButton: BaseView {
+    let fingerRecognizer: UIGestureRecognizer = {
+        let rec = UITapGestureRecognizer()
+        rec.numberOfTapsRequired = 1
+        rec.allowedTouchTypes = [UITouchType.direct.rawValue as NSNumber]
+        rec.delegate = allowSimultaneousDelegate
+        return rec
+    }()
+
+    let pencilRecognizer: UIGestureRecognizer = {
+        let rec = UITapGestureRecognizer()
+        rec.numberOfTapsRequired = 1
+        rec.allowedTouchTypes = [UITouchType.stylus.rawValue as NSNumber]
+        rec.delegate = allowSimultaneousDelegate
+        return rec
+    }()
+
     var action: Tool.Action?
-    var isSelected = false {
+
+    func setColor() {
+        if isSelectedByPencil && isSelectedByFinger {
+            backgroundColor = UIColor.purple
+        } else if isSelectedByPencil {
+            backgroundColor = UIColor.red
+        } else if isSelectedByFinger {
+            backgroundColor = UIColor.blue
+        } else {
+            backgroundColor = UIColor.black
+        }
+        setNeedsDisplay()
+    }
+
+    var isSelectedByPencil = false {
         didSet {
-            backgroundColor = isSelected ? .gray : .black;
+            setColor()
+        }
+    }
+
+    var isSelectedByFinger = false {
+        didSet {
+            setColor()
         }
     }
 
@@ -106,9 +168,11 @@ class ToolSelectorButton: BaseView {
         self.equalConstraints(to: textView)
         textView.backgroundColor = .clear
 
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(_:)))
-        tapRecognizer.numberOfTapsRequired = 1
-        self.addGestureRecognizer(tapRecognizer)
+        fingerRecognizer.addTarget(self, action: #selector(tapped(_:)))
+        pencilRecognizer.addTarget(self, action: #selector(tapped(_:)))
+        self.addGestureRecognizer(fingerRecognizer)
+        self.addGestureRecognizer(pencilRecognizer)
+        print(fingerRecognizer)
     }
 
     override convenience init() {
@@ -116,6 +180,8 @@ class ToolSelectorButton: BaseView {
     }
 
     func tapped(_ recognizer: UIGestureRecognizer) {
-        action?()
+        print("got a tap")
+        assert(recognizer === fingerRecognizer || recognizer === pencilRecognizer)
+        action?(recognizer === fingerRecognizer ? .finger : .pencil)
     }
 }
