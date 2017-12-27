@@ -82,7 +82,7 @@ class BipointAction: SimpleAction {
 
     func finish(with transform: CGAffineTransform) -> CanvasElement? {
         if let first = firstPoint, let second = secondPoint {
-            let path = pathConstructor((first, second))
+            let path = pathConstructor(first, second)
             switch drawType {
             case .stroke(let width):
                 path.lineWidth = width

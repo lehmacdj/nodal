@@ -93,7 +93,7 @@ class MainNodalViewController: UIViewController {
         print("loaded!")
     }
 
-    func actionEventRecieved(_ recognizer: ActionGestureRecognizer) {
+    @objc func actionEventRecieved(_ recognizer: ActionGestureRecognizer) {
         switch recognizer.state {
         case .began,
              .changed:

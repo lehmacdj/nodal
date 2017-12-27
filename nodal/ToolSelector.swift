@@ -179,7 +179,7 @@ class ToolSelectorButton: BaseView {
         self.init(text: "")
     }
 
-    func tapped(_ recognizer: UIGestureRecognizer) {
+    @objc func tapped(_ recognizer: UIGestureRecognizer) {
         print("got a tap")
         assert(recognizer === fingerRecognizer || recognizer === pencilRecognizer)
         action?(recognizer === fingerRecognizer ? .finger : .pencil)
