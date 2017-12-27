@@ -27,6 +27,7 @@ class MainNodalViewController: UIViewController {
     var inverseTransform = CGAffineTransform.identity
 
     let canvasView = CanvasView()
+    let scrollView = UIScrollView()
 
     private func setTool(_ tt: TouchType, provider: @escaping ActionProvider) {
         switch tt {
@@ -51,8 +52,13 @@ class MainNodalViewController: UIViewController {
     override func loadView() {
         super.loadView()
 
-        view.addSubview(canvasView)
-        canvasView.equalConstraints(to: view)
+        scrollView.addSubview(canvasView)
+        // this does correctly create the scroll view, we just need to make it possible to scroll / zoom it now
+        canvasView.heightAnchor.constraint(equalTo: scrollView.heightAnchor, multiplier: 2.0).isActive = true
+        canvasView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, multiplier: 2.0).isActive = true
+
+        view.addSubview(scrollView)
+        scrollView.equalConstraints(to: view)
 
         fingerRecognizer.addTarget(self, action: #selector(actionEventRecieved(_:)))
         pencilRecognizer.addTarget(self, action: #selector(actionEventRecieved(_:)))
