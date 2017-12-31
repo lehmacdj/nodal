@@ -28,27 +28,21 @@ class MainNodalViewController: UIViewController {
 
     let canvasView = CanvasView()
     let scrollView = UIScrollView()
-
-    private func setTool(_ tt: TouchType, provider: @escaping ActionProvider) {
+    
+    private func actionRecognizer(_ tt: TouchType) -> ActionGestureRecognizer {
         switch tt {
         case .finger:
-            fingerRecognizer.actionProvider = provider
+            return fingerRecognizer
         case .pencil:
-            pencilRecognizer.actionProvider = provider
+            return pencilRecognizer
         }
     }
 
     private func mapTool(_ tt: TouchType, with mapper: @escaping (@escaping ActionProvider) -> ActionProvider) {
-        switch tt {
-        case .finger:
-            let prevProvider = fingerRecognizer.actionProvider
-            fingerRecognizer.actionProvider = mapper(prevProvider)
-        case .pencil:
-            let prevProvider = pencilRecognizer.actionProvider
-            pencilRecognizer.actionProvider = mapper(prevProvider)
-        }
+        let rec = actionRecognizer(tt)
+        rec.actionProvider = rec.actionProvider.map(mapper)
     }
-
+    
     override func loadView() {
         super.loadView()
 
@@ -66,24 +60,27 @@ class MainNodalViewController: UIViewController {
         canvasView.addGestureRecognizer(pencilRecognizer)
 
         let tools = [
-            Tool(action: { tt in self.setTool(tt, provider: { BroadLine() } ) },
+            Tool(effect: { tt in self.actionRecognizer(tt).actionProvider = {BroadLine()} },
                  displayStyle: .text("pen"),
-                 actionType: .focus),
-            Tool(action: { tt in self.setTool(tt, provider: mkDrawStraightLine) },
+                 effectType: .focus),
+            Tool(effect: { tt in self.actionRecognizer(tt).actionProvider = mkDrawStraightLine },
                  displayStyle: .text("line"),
-                 actionType: .focus),
-            Tool(action: { tt in self.setTool(tt, provider: mkDrawCircle) },
+                 effectType: .focus),
+            Tool(effect: { tt in self.actionRecognizer(tt).actionProvider = mkDrawCircle },
                  displayStyle: .text("circle"),
-                 actionType: .focus),
-            Tool(action: { tt in self.mapTool(tt, with: { prev in { SlowAction(below: prev()) } }) },
+                 effectType: .focus),
+            Tool(effect: { tt in self.mapTool(tt, with: { prev in { SlowAction(below: prev()) } }) },
                  displayStyle: .text("slow"),
-                 actionType: .instant),
-            Tool(action: { tt in
+                 effectType: .instant),
+            Tool(effect: { tt in self.actionRecognizer(tt).actionProvider = nil },
+                 displayStyle: .text("disable"),
+                 effectType: .focus),
+            Tool(effect: { tt in
                     self.canvasView.clear()
                     self.canvas.elements.removeAll()
                  },
                  displayStyle: .text("clear"),
-                 actionType: .instant),
+                 effectType: .instant),
         ]
 
         let toolbar = ToolSelectorView(tools: tools)

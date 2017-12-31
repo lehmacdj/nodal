@@ -14,8 +14,9 @@ enum TouchType {
 }
 
 struct Tool {
-    typealias Action = (TouchType) -> ()
-    let action:  Action
+    // the effect on the state of the window, when pressing the tool
+    typealias Effect = (TouchType) -> ()
+    let effect:  Effect
 
     enum Display {
         // case image(UIImage)
@@ -23,11 +24,12 @@ struct Tool {
     }
     let displayStyle: Display
 
-    enum ActionType {
+    // does the effect focus the pressed tool or not?
+    enum EffectType {
         case instant
         case focus
     }
-    let actionType: ActionType
+    let effectType: EffectType
 }
 
 class ToolSelectorView: BaseView {
@@ -65,7 +67,7 @@ class ToolSelectorView: BaseView {
             switch tool.displayStyle {
             case .text(let text):
                 let button = ToolSelectorButton(text: text)
-                button.action = createActionFor(control: button, tool: tool)
+                button.effect = createEffectFor(control: button, tool: tool)
                 buttons.append(button)
                 stackView.addArrangedSubview(button)
                 print(text)
@@ -86,12 +88,16 @@ class ToolSelectorView: BaseView {
         fatalError("are you sure this is what you wanted to do?")
     }
 
-    func createActionFor(control: ToolSelectorButton, tool: Tool) -> Tool.Action {
+    func createEffectFor(control: ToolSelectorButton, tool: Tool) -> Tool.Effect {
         return { tt in
-            switch tool.actionType {
+            switch tool.effectType {
             case .instant:
+                // don't do anything if tool is instant
+                // in the future we may want an animation here
                 break
             case .focus:
+                // we need to focus, the tool and set the tool
+                // based on whatever focused the touch
                 switch tt {
                 case .pencil:
                     self.selectedByPencil = control
@@ -99,7 +105,7 @@ class ToolSelectorView: BaseView {
                     self.selectedByFinger = control
                 }
             }
-            tool.action(tt)
+            tool.effect(tt)
         }
     }
 }
@@ -129,8 +135,6 @@ class ToolSelectorButton: BaseView {
         return rec
     }()
 
-    var action: Tool.Action?
-
     func setColor() {
         if isSelectedByPencil && isSelectedByFinger {
             backgroundColor = UIColor.purple
@@ -155,6 +159,10 @@ class ToolSelectorButton: BaseView {
             setColor()
         }
     }
+    
+    // we need to knot the button together given the cyclic dependency
+    // between the closure and the button
+    var effect: Tool.Effect?
 
     init(text: String) {
         super.init()
@@ -182,6 +190,6 @@ class ToolSelectorButton: BaseView {
     @objc func tapped(_ recognizer: UIGestureRecognizer) {
         print("got a tap")
         assert(recognizer === fingerRecognizer || recognizer === pencilRecognizer)
-        action?(recognizer === fingerRecognizer ? .finger : .pencil)
+        effect?(recognizer === fingerRecognizer ? .finger : .pencil)
     }
 }

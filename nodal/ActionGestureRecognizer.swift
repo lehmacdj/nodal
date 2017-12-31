@@ -16,7 +16,16 @@ let CANCELATION_INTERVAL = TimeInterval(0.1)
 // recognizes Actions
 class ActionGestureRecognizer: UIGestureRecognizer {
     // the action to perform on touches
-    public var actionProvider: ActionProvider = { SlowAction(below: BroadLine(), interval: 1) }
+    public var actionProvider: ActionProvider?
+        = { SlowAction(below: BroadLine(), interval: 1) } {
+        didSet {
+            if actionProvider == nil {
+                isEnabled = false
+            } else {
+                isEnabled = true
+            }
+        }
+    }
 
     public var action: Action? {
         return trackingData?.action
@@ -106,7 +115,9 @@ class ActionGestureRecognizer: UIGestureRecognizer {
         }
 
         if let firstTouch = touches.first {
-            trackingData = TrackingData(action: actionProvider(),
+            // the action should exist if we got a touches began, because
+            // we disable the action recognizer when the provider is nil
+            trackingData = TrackingData(action: actionProvider!(),
                                         start: firstTouch.timestamp,
                                         touch: firstTouch,
                                         lastLocation: firstTouch.location(in: view!))
