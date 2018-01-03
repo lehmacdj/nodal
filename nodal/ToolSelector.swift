@@ -8,11 +8,6 @@
 
 import UIKit
 
-enum TouchType {
-    case finger
-    case pencil
-}
-
 struct Tool {
     // the effect on the state of the window, when pressing the tool
     typealias Effect = (TouchType) -> ()
@@ -27,9 +22,20 @@ struct Tool {
     // does the effect focus the pressed tool or not?
     enum EffectType {
         case instant
-        case focus
+        // allows a destructor for the tool
+        case focus(Effect?)
     }
     let effectType: EffectType
+    
+    // the optional destructor based on the effect type
+    var destructor: Effect? {
+        switch effectType {
+        case let .focus(d):
+            return d
+        default:
+            return nil
+        }
+    }
 }
 
 class ToolSelectorView: BaseView {
@@ -46,6 +52,7 @@ class ToolSelectorView: BaseView {
 
     var selectedByPencil: ToolSelectorButton? {
         willSet {
+            selectedByPencil?.destructor?(.pencil)
             selectedByPencil?.isSelectedByPencil = false
             newValue?.isSelectedByPencil = true
         }
@@ -53,6 +60,7 @@ class ToolSelectorView: BaseView {
 
     var selectedByFinger: ToolSelectorButton? {
         willSet {
+            selectedByFinger?.destructor?(.finger)
             selectedByFinger?.isSelectedByFinger = false
             newValue?.isSelectedByFinger = true
         }
@@ -68,6 +76,7 @@ class ToolSelectorView: BaseView {
             case .text(let text):
                 let button = ToolSelectorButton(text: text)
                 button.effect = createEffectFor(control: button, tool: tool)
+                button.destructor = tool.destructor
                 buttons.append(button)
                 stackView.addArrangedSubview(button)
                 print(text)
@@ -77,6 +86,8 @@ class ToolSelectorView: BaseView {
         if let first = buttons.first {
             selectedByFinger = first
             selectedByPencil = first
+            first.isSelectedByFinger = true
+            first.isSelectedByPencil = true
         }
 
         self.addSubview(stackView)
@@ -163,6 +174,7 @@ class ToolSelectorButton: BaseView {
     // we need to knot the button together given the cyclic dependency
     // between the closure and the button
     var effect: Tool.Effect?
+    var destructor: Tool.Effect?
 
     init(text: String) {
         super.init()

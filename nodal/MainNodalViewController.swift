@@ -9,6 +9,16 @@
 import UIKit
 
 class MainNodalViewController: UIViewController {
+    // MARK: Drawing Layer + Underlying Data
+    let canvas = CompleteCanvas()
+    
+    var transform = CGAffineTransform.identity
+    var inverseTransform = CGAffineTransform.identity
+    
+    let canvasView = CanvasView()
+    
+    
+    // MARK: Action Gesture Recognizers
     let fingerRecognizer: ActionGestureRecognizer =  {
         let rec = ActionGestureRecognizer()
         rec.touchType = .finger
@@ -20,14 +30,6 @@ class MainNodalViewController: UIViewController {
         rec.touchType = .pencil
         return rec
     }()
-
-    let canvas = CompleteCanvas()
-
-    var transform = CGAffineTransform.identity
-    var inverseTransform = CGAffineTransform.identity
-
-    let canvasView = CanvasView()
-    let scrollView = UIScrollView()
     
     private func actionRecognizer(_ tt: TouchType) -> ActionGestureRecognizer {
         switch tt {
@@ -37,22 +39,61 @@ class MainNodalViewController: UIViewController {
             return pencilRecognizer
         }
     }
-
+    
     private func mapTool(_ tt: TouchType, with mapper: @escaping (@escaping ActionProvider) -> ActionProvider) {
         let rec = actionRecognizer(tt)
         rec.actionProvider = rec.actionProvider.map(mapper)
     }
+
+    
+    // MARK: Scroll View + Delegate
+    let scrollView: UIScrollView = {
+        let sv = UIScrollView()
+        sv.panGestureRecognizer.minimumNumberOfTouches = 2
+        sv.panGestureRecognizer.maximumNumberOfTouches = 2
+        return sv
+    }()
+    
+    // manage how it is possible to scroll around the view
+    private func activateScroll(_ tt: TouchType) {
+        switch tt {
+        case .finger:
+            scrollView.panGestureRecognizer.minimumNumberOfTouches = 1
+        case .pencil:
+            // TODO: currently it isn't possible to have the pencil use
+            // scroll while having the finger be used for drawing
+            // solving this will probably require a sop
+            scrollView.panGestureRecognizer.touchTypes += [.pencil]
+        }
+    }
+    
+    private func disableScroll(_ tt: TouchType) {
+        switch tt {
+        case .finger:
+            scrollView.panGestureRecognizer.minimumNumberOfTouches = 2
+            print("min touches is ", scrollView.panGestureRecognizer.minimumNumberOfTouches)
+        case .pencil:
+            scrollView.panGestureRecognizer.touchTypes = [.finger]
+        }
+    }
+    
+    // MARK: Layout + Initialization
     
     override func loadView() {
         super.loadView()
-
-        scrollView.addSubview(canvasView)
-        // this does correctly create the scroll view, we just need to make it possible to scroll / zoom it now
-        canvasView.heightAnchor.constraint(equalTo: scrollView.heightAnchor, multiplier: 2.0).isActive = true
-        canvasView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, multiplier: 2.0).isActive = true
-
+        
         view.addSubview(scrollView)
+        scrollView.addSubview(canvasView)
+
         scrollView.equalConstraints(to: view)
+        
+        // confusing special constraint is necessary to allow scrolling
+        // this is really a crime as far as software engineering is concerned
+        scrollView.equalConstraints(to: canvasView)
+
+        // this does correctly create the scroll view, we just need to make it possible to scroll / zoom it now
+        canvasView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 2.0).isActive = true
+        canvasView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 2.0).isActive = true
 
         fingerRecognizer.addTarget(self, action: #selector(actionEventRecieved(_:)))
         pencilRecognizer.addTarget(self, action: #selector(actionEventRecieved(_:)))
@@ -62,19 +103,19 @@ class MainNodalViewController: UIViewController {
         let tools = [
             Tool(effect: { tt in self.actionRecognizer(tt).actionProvider = {BroadLine()} },
                  displayStyle: .text("pen"),
-                 effectType: .focus),
+                 effectType: .focus(nil)),
             Tool(effect: { tt in self.actionRecognizer(tt).actionProvider = mkDrawStraightLine },
                  displayStyle: .text("line"),
-                 effectType: .focus),
+                 effectType: .focus(nil)),
             Tool(effect: { tt in self.actionRecognizer(tt).actionProvider = mkDrawCircle },
                  displayStyle: .text("circle"),
-                 effectType: .focus),
+                 effectType: .focus(nil)),
             Tool(effect: { tt in self.mapTool(tt, with: { prev in { SlowAction(below: prev()) } }) },
                  displayStyle: .text("slow"),
                  effectType: .instant),
-            Tool(effect: { tt in self.actionRecognizer(tt).actionProvider = nil },
-                 displayStyle: .text("disable"),
-                 effectType: .focus),
+            Tool(effect: activateScroll,
+                 displayStyle: .text("scroll"),
+                 effectType: .focus(disableScroll)),
             Tool(effect: { tt in
                     self.canvasView.clear()
                     self.canvas.elements.removeAll()
@@ -113,4 +154,9 @@ class MainNodalViewController: UIViewController {
             print("something broke, we are in an unexpected state")
         }
     }
+}
+
+// Delegate for the scroll view to determine if it
+// should begin recognizing the scroll gesture
+extension MainNodalViewController: UIGestureRecognizerDelegate {
 }

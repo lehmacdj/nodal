@@ -34,12 +34,7 @@ class ActionGestureRecognizer: UIGestureRecognizer {
     // accepted touch types
     var touchType: TouchType = .finger {
         didSet {
-            switch touchType {
-            case .pencil:
-                allowedTouchTypes = [UITouchType.stylus.rawValue as NSNumber]
-            case .finger:
-                allowedTouchTypes = [UITouchType.direct.rawValue as NSNumber]
-            }
+            touchTypes = [touchType]
         }
     }
 

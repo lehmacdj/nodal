@@ -19,9 +19,10 @@ class CanvasView: BaseView {
     override init() {
         super.init()
         backgroundColor = .white
-        // let image = UIImageView(image: #imageLiteral(resourceName: "Light-Background"))
-        // addSubview(image)
-        // self.equalConstraints(to: image)
+        let image = UIImageView(image: #imageLiteral(resourceName: "Light-Background"))
+        addSubview(image)
+        image.alpha = 0.5
+        self.equalConstraints(to: image)
         contentMode = .redraw
         layer.drawsAsynchronously = true
     }
