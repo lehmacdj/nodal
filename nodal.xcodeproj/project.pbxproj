@@ -97,17 +97,14 @@
 		033EAE3A1EBF9F0A000F4053 /* nodal */ = {
 			isa = PBXGroup;
 			children = (
+				039A96461FFD9C7E009BCB30 /* DataStructures */,
+				039A96451FFD9C73009BCB30 /* Drawing */,
+				039A96441FFD9C64009BCB30 /* Input */,
 				033EAE3B1EBF9F0A000F4053 /* AppDelegate.swift */,
-				036ECA8E1EC0F03F0071AC02 /* Action.swift */,
-				03DAEA241EE691FE00F6EF91 /* Sample.swift */,
-				036ECA921EC0F0C30071AC02 /* Canvas.swift */,
-				035C9C621EF0DAFB00E2C515 /* Spline.swift */,
 				033EAE3D1EBF9F0A000F4053 /* MainNodalViewController.swift */,
 				033788ED1EF85485007E0C80 /* ToolSelector.swift */,
 				034F06011FFAC8D20055100A /* CoreTypes.swift */,
 				033788EF1EF854C8007E0C80 /* BaseView.swift */,
-				036ECA901EC0F0B20071AC02 /* CanvasView.swift */,
-				0376B2321EE106DD007BFC1A /* ActionGestureRecognizer.swift */,
 				034F06051FFAC9320055100A /* Extensions */,
 				033EAE441EBF9F0A000F4053 /* LaunchScreen.storyboard */,
 				033EAE421EBF9F0A000F4053 /* Assets.xcassets */,
@@ -132,6 +129,33 @@
 				034F06031FFAC9240055100A /* GestureRecognizerExt.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		039A96441FFD9C64009BCB30 /* Input */ = {
+			isa = PBXGroup;
+			children = (
+				036ECA8E1EC0F03F0071AC02 /* Action.swift */,
+				03DAEA241EE691FE00F6EF91 /* Sample.swift */,
+				0376B2321EE106DD007BFC1A /* ActionGestureRecognizer.swift */,
+			);
+			path = Input;
+			sourceTree = "<group>";
+		};
+		039A96451FFD9C73009BCB30 /* Drawing */ = {
+			isa = PBXGroup;
+			children = (
+				036ECA921EC0F0C30071AC02 /* Canvas.swift */,
+				035C9C621EF0DAFB00E2C515 /* Spline.swift */,
+				036ECA901EC0F0B20071AC02 /* CanvasView.swift */,
+			);
+			path = Drawing;
+			sourceTree = "<group>";
+		};
+		039A96461FFD9C7E009BCB30 /* DataStructures */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = DataStructures;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
