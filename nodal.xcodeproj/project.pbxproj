@@ -22,7 +22,7 @@
 		036ECA911EC0F0B20071AC02 /* CanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036ECA901EC0F0B20071AC02 /* CanvasView.swift */; };
 		036ECA931EC0F0C30071AC02 /* Canvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036ECA921EC0F0C30071AC02 /* Canvas.swift */; };
 		0376B2331EE106DD007BFC1A /* ActionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0376B2321EE106DD007BFC1A /* ActionGestureRecognizer.swift */; };
-		039A96431FFD89D6009BCB30 /* CustomInputScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 039A96421FFD89D6009BCB30 /* CustomInputScrollView.swift */; };
+		039A96431FFD89D6009BCB30 /* CustomSingleTouchScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 039A96421FFD89D6009BCB30 /* CustomSingleTouchScrollView.swift */; };
 		03DAEA251EE691FE00F6EF91 /* Sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03DAEA241EE691FE00F6EF91 /* Sample.swift */; };
 /* End PBXBuildFile section */
 
@@ -56,7 +56,7 @@
 		036ECA901EC0F0B20071AC02 /* CanvasView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasView.swift; sourceTree = "<group>"; };
 		036ECA921EC0F0C30071AC02 /* Canvas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Canvas.swift; sourceTree = "<group>"; };
 		0376B2321EE106DD007BFC1A /* ActionGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionGestureRecognizer.swift; sourceTree = "<group>"; };
-		039A96421FFD89D6009BCB30 /* CustomInputScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInputScrollView.swift; sourceTree = "<group>"; };
+		039A96421FFD89D6009BCB30 /* CustomSingleTouchScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSingleTouchScrollView.swift; sourceTree = "<group>"; };
 		03DAEA241EE691FE00F6EF91 /* Sample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sample.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -105,7 +105,7 @@
 				036ECA921EC0F0C30071AC02 /* Canvas.swift */,
 				035C9C621EF0DAFB00E2C515 /* Spline.swift */,
 				033EAE3D1EBF9F0A000F4053 /* MainNodalViewController.swift */,
-				039A96421FFD89D6009BCB30 /* CustomInputScrollView.swift */,
+				039A96421FFD89D6009BCB30 /* CustomSingleTouchScrollView.swift */,
 				033788ED1EF85485007E0C80 /* ToolSelector.swift */,
 				034F06011FFAC8D20055100A /* CoreTypes.swift */,
 				033788EF1EF854C8007E0C80 /* BaseView.swift */,
@@ -253,7 +253,7 @@
 				033EAE3C1EBF9F0A000F4053 /* AppDelegate.swift in Sources */,
 				03DAEA251EE691FE00F6EF91 /* Sample.swift in Sources */,
 				0376B2331EE106DD007BFC1A /* ActionGestureRecognizer.swift in Sources */,
-				039A96431FFD89D6009BCB30 /* CustomInputScrollView.swift in Sources */,
+				039A96431FFD89D6009BCB30 /* CustomSingleTouchScrollView.swift in Sources */,
 				033788F01EF854C8007E0C80 /* BaseView.swift in Sources */,
 				035C9C611EE9D57100E2C515 /* CGMathExt.swift in Sources */,
 			);

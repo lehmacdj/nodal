@@ -49,31 +49,18 @@ class MainNodalViewController: UIViewController {
     // MARK: Scroll View + Delegate
     let scrollView: UIScrollView = {
         let sv = UIScrollView()
-        sv.panGestureRecognizer.minimumNumberOfTouches = 2
-        sv.panGestureRecognizer.maximumNumberOfTouches = 2
+        sv.panGestureRecognizer.touchTypes = []
         return sv
     }()
     
     // manage how it is possible to scroll around the view
     private func activateScroll(_ tt: TouchType) {
-        switch tt {
-        case .finger:
-            scrollView.panGestureRecognizer.minimumNumberOfTouches = 1
-        case .pencil:
-            // TODO: currently it isn't possible to have the pencil use
-            // scroll while having the finger be used for drawing
-            // solving this will probably require a sop
-            scrollView.panGestureRecognizer.touchTypes += [.pencil]
-        }
+        scrollView.panGestureRecognizer.touchTypes.append(tt)
     }
     
     private func disableScroll(_ tt: TouchType) {
-        switch tt {
-        case .finger:
-            scrollView.panGestureRecognizer.minimumNumberOfTouches = 2
-            print("min touches is ", scrollView.panGestureRecognizer.minimumNumberOfTouches)
-        case .pencil:
-            scrollView.panGestureRecognizer.touchTypes = [.finger]
+        if let i = scrollView.panGestureRecognizer.touchTypes.index(of: tt) {
+            scrollView.panGestureRecognizer.touchTypes.remove(at: i)
         }
     }
     
