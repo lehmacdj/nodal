@@ -50,15 +50,19 @@ class MainNodalViewController: UIViewController {
     let scrollView: UIScrollView = {
         let sv = UIScrollView()
         sv.panGestureRecognizer.touchTypes = []
+        sv.minimumZoomScale = 0.5
+        sv.maximumZoomScale = 2.0
         return sv
     }()
     
     // manage how it is possible to scroll around the view
     private func activateScroll(_ tt: TouchType) {
         scrollView.panGestureRecognizer.touchTypes.append(tt)
+        actionRecognizer(tt).isEnabled = false
     }
     
     private func disableScroll(_ tt: TouchType) {
+        actionRecognizer(tt).isEnabled = true
         if let i = scrollView.panGestureRecognizer.touchTypes.index(of: tt) {
             scrollView.panGestureRecognizer.touchTypes.remove(at: i)
         }
@@ -71,6 +75,7 @@ class MainNodalViewController: UIViewController {
         
         view.addSubview(scrollView)
         scrollView.addSubview(canvasView)
+        scrollView.delegate = self
 
         scrollView.equalConstraints(to: view)
         
@@ -143,7 +148,10 @@ class MainNodalViewController: UIViewController {
     }
 }
 
-// Delegate for the scroll view to determine if it
-// should begin recognizing the scroll gesture
-extension MainNodalViewController: UIGestureRecognizerDelegate {
+extension MainNodalViewController: UIScrollViewDelegate {
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return canvasView
+    }
+    
+    func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {}
 }
