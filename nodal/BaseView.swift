@@ -31,7 +31,7 @@ extension UIView {
         self.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         self.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
-    
+
     func scaledConstraint(to view: UIView,
                           attribute: NSLayoutAttribute,
                           multiplier: CGFloat,
