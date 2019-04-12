@@ -21,7 +21,7 @@ enum TouchType {
             return .finger
         case .indirect:
             return nil
-        case .stylus:
+        case .pencil:
             return .pencil
         }
     }
