@@ -11,7 +11,7 @@ import UIKit
 extension UIGestureRecognizer {
     var touchTypes: [TouchType] {
         get {
-            return allowedTouchTypes.flatMap(TouchType.fromNSNumber)
+            return allowedTouchTypes.compactMap(TouchType.fromNSNumber)
         }
 
         set {

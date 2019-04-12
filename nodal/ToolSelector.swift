@@ -133,7 +133,7 @@ class ToolSelectorButton: BaseView {
     let fingerRecognizer: UIGestureRecognizer = {
         let rec = UITapGestureRecognizer()
         rec.numberOfTapsRequired = 1
-        rec.allowedTouchTypes = [UITouchType.direct.rawValue as NSNumber]
+        rec.allowedTouchTypes = [UITouch.TouchType.direct.rawValue as NSNumber]
         rec.delegate = allowSimultaneousDelegate
         return rec
     }()
@@ -141,7 +141,7 @@ class ToolSelectorButton: BaseView {
     let pencilRecognizer: UIGestureRecognizer = {
         let rec = UITapGestureRecognizer()
         rec.numberOfTapsRequired = 1
-        rec.allowedTouchTypes = [UITouchType.stylus.rawValue as NSNumber]
+        rec.allowedTouchTypes = [UITouch.TouchType.stylus.rawValue as NSNumber]
         rec.delegate = allowSimultaneousDelegate
         return rec
     }()

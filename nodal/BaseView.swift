@@ -33,7 +33,7 @@ extension UIView {
     }
 
     func scaledConstraint(to view: UIView,
-                          attribute: NSLayoutAttribute,
+                          attribute: NSLayoutConstraint.Attribute,
                           multiplier: CGFloat,
                           constant: CGFloat = 0.0) {
         let constraint = NSLayoutConstraint(item: self,

@@ -63,7 +63,7 @@ class MainNodalViewController: UIViewController {
     
     private func disableScroll(_ tt: TouchType) {
         actionRecognizer(tt).isEnabled = true
-        if let i = scrollView.panGestureRecognizer.touchTypes.index(of: tt) {
+        if let i = scrollView.panGestureRecognizer.touchTypes.firstIndex(of: tt) {
             scrollView.panGestureRecognizer.touchTypes.remove(at: i)
         }
     }
