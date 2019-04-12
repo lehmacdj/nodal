@@ -23,6 +23,8 @@ enum TouchType {
             return nil
         case .pencil:
             return .pencil
+        @unknown default:
+            fatalError("unknown default in switch case")
         }
     }
     
