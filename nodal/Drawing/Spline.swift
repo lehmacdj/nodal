@@ -80,13 +80,13 @@ struct SplinePointIterator: IteratorProtocol {
         let point = spline.points[index]
         let neighbors: Neighbors
         if inBounds(index - 1) && inBounds(index + 1) {
-            neighbors = .middle(spline.points[index - 1], spline.points[index + 1])
+            neighbors = .preceedingAndFollowing(spline.points[index - 1], spline.points[index + 1])
         } else if inBounds(index - 1) {
-            neighbors = .end(spline.points[index - 1])
+            neighbors = .preceedingOnly(spline.points[index - 1])
         } else if inBounds(index + 1) {
-            neighbors = .start(spline.points[index + 1])
+            neighbors = .followingOnly(spline.points[index + 1])
         } else {
-            neighbors = .single
+            neighbors = .noNeighbors
         }
 
         index += 1
@@ -96,10 +96,10 @@ struct SplinePointIterator: IteratorProtocol {
 }
 
 enum Neighbors {
-    case single
-    case start(SamplePoint)
-    case end(SamplePoint)
-    case middle(SamplePoint, SamplePoint)
+    case noNeighbors
+    case followingOnly(SamplePoint)
+    case preceedingOnly(SamplePoint)
+    case preceedingAndFollowing(SamplePoint, SamplePoint)
 }
 
 // a point and its neighbors
@@ -132,13 +132,13 @@ struct SplinePoint {
     func boundingDirections() -> (CGVector, CGVector) {
         let dleft: CGVector
         switch neighbors {
-        case .single:
+        case .noNeighbors:
             dleft = CGVector(magnitude: 1, angle: 0)
-        case .start(let p):
+        case .followingOnly(let p):
             dleft = CGVector(from: point.location, to: p.location).perpendicular().intoUnit()
-        case .end(let p):
+        case .preceedingOnly(let p):
             dleft = -1 * CGVector(from: point.location, to: p.location).perpendicular().intoUnit()
-        case .middle(let first, let second):
+        case .preceedingAndFollowing(let first, let second):
             let prev = CGVector(from: first.location, to: point.location)
             let next = CGVector(from: point.location, to: second.location)
             // points that are to the left are less than a 180˚ turn

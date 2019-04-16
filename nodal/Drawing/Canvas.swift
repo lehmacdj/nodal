@@ -202,7 +202,7 @@ class PenStroke: CanvasElement {
                 leftPath.addLine(to: last)
                 rightPath.addLine(to: last)
             }
-
+            
             let path = leftPath.reversing()
             path.append(rightPath)
             path.fill()
