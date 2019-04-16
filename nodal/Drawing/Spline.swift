@@ -53,6 +53,11 @@ class Spline {
         path.stroke()
         UIColor.black.set()
     }
+
+    func inBounds(_ index: Int) -> Bool {
+        return index >= 0
+            && index < points.count
+    }
 }
 
 extension Spline: Sequence {
@@ -69,29 +74,15 @@ struct SplinePointIterator: IteratorProtocol {
         self.spline = spline
     }
 
-    func inBounds(_ index: Int) -> Bool {
-        return index >= 0
-            && index < spline.points.count
-    }
-
     mutating func next() -> SplinePoint? {
-        guard inBounds(index) else { return nil }
+        guard spline.inBounds(index) else { return nil }
 
         let point = spline.points[index]
-        let neighbors: Neighbors
-        if inBounds(index - 1) && inBounds(index + 1) {
-            neighbors = .preceedingAndFollowing(spline.points[index - 1], spline.points[index + 1])
-        } else if inBounds(index - 1) {
-            neighbors = .preceedingOnly(spline.points[index - 1])
-        } else if inBounds(index + 1) {
-            neighbors = .followingOnly(spline.points[index + 1])
-        } else {
-            neighbors = .noNeighbors
-        }
 
         index += 1
         return SplinePoint(point: point,
-                           neighbors: neighbors)
+                           index: index - 1,
+                           parent: spline)
     }
 }
 
@@ -105,7 +96,33 @@ enum Neighbors {
 // a point and its neighbors
 struct SplinePoint {
     let point: SamplePoint
-    let neighbors: Neighbors
+    let index: Int // in bounds in the spline by invariant
+    let parent: Spline
+
+    var neighbors: Neighbors {
+        if parent.inBounds(index - 1) && parent.inBounds(index + 1) {
+            return .preceedingAndFollowing(parent.points[index - 1], parent.points[index + 1])
+        } else if parent.inBounds(index - 1) {
+            return .preceedingOnly(parent.points[index - 1])
+        } else if parent.inBounds(index + 1) {
+            return .followingOnly(parent.points[index + 1])
+        } else {
+            return .noNeighbors
+        }
+    }
+
+    // return a relative point if it exists
+    // examples:
+    // - p.relative(-1) = "the immediate prior point in the parent spline"
+    // - p.relative(0) = p.point
+    // - p.relative(1) = "the immediate next point in the parent spline"
+    func relative(_ i: Int) -> SamplePoint? {
+        if parent.inBounds(index + i) {
+            return parent.points[index + i]
+        } else {
+            return nil
+        }
+    }
 
     var location: CGPoint {
         return point.location
