@@ -142,7 +142,6 @@ struct SplinePoint {
 
         // TODO: some kind of restriction of the domain to be more
         // regular. Right now the value could be anywhere from 0 to infinity
-
         return protoForce
     }
 
