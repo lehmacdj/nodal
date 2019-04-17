@@ -18,6 +18,7 @@
 		034F06041FFAC9240055100A /* GestureRecognizerExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 034F06031FFAC9240055100A /* GestureRecognizerExt.swift */; };
 		035C9C611EE9D57100E2C515 /* CGMathExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 035C9C601EE9D57100E2C515 /* CGMathExt.swift */; };
 		035C9C631EF0DAFB00E2C515 /* Spline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 035C9C621EF0DAFB00E2C515 /* Spline.swift */; };
+		036DB63522676AFD009738E7 /* CatmullRom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036DB63422676AFD009738E7 /* CatmullRom.swift */; };
 		036ECA8F1EC0F03F0071AC02 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036ECA8E1EC0F03F0071AC02 /* Action.swift */; };
 		036ECA911EC0F0B20071AC02 /* CanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036ECA901EC0F0B20071AC02 /* CanvasView.swift */; };
 		036ECA931EC0F0C30071AC02 /* Canvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036ECA921EC0F0C30071AC02 /* Canvas.swift */; };
@@ -51,6 +52,7 @@
 		034F06031FFAC9240055100A /* GestureRecognizerExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureRecognizerExt.swift; sourceTree = "<group>"; };
 		035C9C601EE9D57100E2C515 /* CGMathExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGMathExt.swift; sourceTree = "<group>"; };
 		035C9C621EF0DAFB00E2C515 /* Spline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spline.swift; sourceTree = "<group>"; };
+		036DB63422676AFD009738E7 /* CatmullRom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatmullRom.swift; sourceTree = "<group>"; };
 		036ECA8E1EC0F03F0071AC02 /* Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		036ECA901EC0F0B20071AC02 /* CanvasView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasView.swift; sourceTree = "<group>"; };
 		036ECA921EC0F0C30071AC02 /* Canvas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Canvas.swift; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 				036ECA921EC0F0C30071AC02 /* Canvas.swift */,
 				035C9C621EF0DAFB00E2C515 /* Spline.swift */,
 				036ECA901EC0F0B20071AC02 /* CanvasView.swift */,
+				036DB63422676AFD009738E7 /* CatmullRom.swift */,
 			);
 			path = Drawing;
 			sourceTree = "<group>";
@@ -264,6 +267,7 @@
 				036ECA8F1EC0F03F0071AC02 /* Action.swift in Sources */,
 				036ECA931EC0F0C30071AC02 /* Canvas.swift in Sources */,
 				033EAE3C1EBF9F0A000F4053 /* AppDelegate.swift in Sources */,
+				036DB63522676AFD009738E7 /* CatmullRom.swift in Sources */,
 				03DAEA251EE691FE00F6EF91 /* Sample.swift in Sources */,
 				0376B2331EE106DD007BFC1A /* ActionGestureRecognizer.swift in Sources */,
 				033788F01EF854C8007E0C80 /* BaseView.swift in Sources */,

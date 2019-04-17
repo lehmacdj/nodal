@@ -31,6 +31,18 @@ func -(left: CGPoint, right: CGVector) -> CGPoint {
                    y: left.y - right.dy)
 }
 
+// scalar multiplication for points
+func *(left: CGFloat, right: CGPoint) -> CGPoint {
+    return CGPoint(x: left * right.x,
+                   y: left * right.y)
+}
+
+extension CGPoint {
+    var vector: CGVector {
+        return CGVector(dx: x, dy: y)
+    }
+}
+
 extension CGVector {
     // create vectors between points
     init(from p1: CGPoint, to p2: CGPoint) {
