@@ -181,31 +181,36 @@ class PenStroke: CanvasElement {
 
     func createDrawer(with transform: CGAffineTransform) -> Drawer {
         return { rect in
-            let leftPath = UIBezierPath()
-            let rightPath = UIBezierPath()
+            let path = UIBezierPath()
 
             // compute a point to start at
-            guard let first = self.spline.points.first?.location else {
+            guard let first = self.spline.points.first else {
+                // if we don't have one then, the spline is empty so we are done
                 return
             }
 
-            leftPath.move(to: first)
-            rightPath.move(to: first)
-
             for point in self.spline {
-                let (left, right) = point.boundingDirections()
-                leftPath.addLine(to: point.location + point.force * 10 * left)
-                rightPath.addLine(to: point.location + point.force * 10 * right)
+                if point.point.location == first.location {
+                    // on the first point in the spline just move to the start of it
+                    path.move(to: point.location)
+                    continue
+                }
+
+                let p0 = point.relative(-1)?.location ?? point.location
+                let p1 = point.location
+                guard let p2 = point.relative(1)?.location else {
+                    // if there is no second point we have reached the end of the line
+                    // so there is no point in continuing to draw a line
+                    break
+                }
+                let p3 = point.relative(2)?.location ?? p2
+
+                let bcs = catmullRomInterpolate(p0: p0, p1: p1, p2: p2, p3: p3, alpha: 1.0)
+
+                path.addCurve(to: p2, controlPoint1: bcs.controlPoint1, controlPoint2: bcs.controlPoint2)
             }
 
-            if let last = self.spline.points.last?.location {
-                leftPath.addLine(to: last)
-                rightPath.addLine(to: last)
-            }
-            
-            let path = leftPath.reversing()
-            path.append(rightPath)
-            path.fill()
+            path.stroke()
         }
     }
 }
