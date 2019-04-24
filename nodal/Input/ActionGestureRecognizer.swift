@@ -66,6 +66,9 @@ class ActionGestureRecognizer: UIGestureRecognizer {
         for touch in touches {
             if touch !== trackingData.touch &&
                touch.timestamp - trackingData.start < CANCELATION_INTERVAL {
+                // we have a second finger touch, at the same time
+                // this cancels the drawing of a line with the finger
+                // otherwise the data would come from the same recognizer
                 if state == .possible {
                     state = .failed
                 } else {
