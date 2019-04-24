@@ -49,6 +49,8 @@ class ActionGestureRecognizer: UIGestureRecognizer {
     var trackingData: TrackingData? = nil
 
     // the timer for starting drawing
+    // we only use this for fingers, because the pencil is precise enough that we should be able
+    // to assume that any touch is intentional.
     var startTimer: Timer? = nil
 
     // add a touch to the current action if it exists
