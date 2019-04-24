@@ -14,7 +14,7 @@ import UIKit
 enum TouchType {
     case finger
     case pencil
-    
+
     static func fromUITouchType(_ uiTT: UITouch.TouchType) -> TouchType? {
         switch uiTT {
         case .direct:
@@ -27,11 +27,11 @@ enum TouchType {
             fatalError("unknown default in switch case")
         }
     }
-    
+
     static func fromNSNumber(_ nsn: NSNumber) -> TouchType? {
         return UITouch.TouchType(rawValue: nsn.intValue).flatMap(fromUITouchType)
     }
-    
+
     static func toNSNumber(_ tt: TouchType) -> NSNumber {
         switch tt {
         case .finger:
