@@ -43,7 +43,7 @@ class ActionGestureRecognizer: UIGestureRecognizer {
         let action: Action
         let start: TimeInterval
         let touch: UITouch
-        var lastLocation: CGPoint
+        var lastSample: SamplePoint
     }
 
     // the initial touch that is now being tracked by this recognizer
@@ -84,8 +84,8 @@ class ActionGestureRecognizer: UIGestureRecognizer {
         }
 
         for touch in event.coalescedTouches(for: trackingData.touch)! {
-            if let sample = SamplePoint(for: touch, in: view!, prev: trackingData.lastLocation) {
-                self.trackingData!.lastLocation = sample.location
+            if let sample = SamplePoint(for: touch, in: view!, prev: trackingData.lastSample) {
+                self.trackingData!.lastSample = sample
                 if touch.estimatedPropertiesExpectingUpdates.isEmpty {
                     trackingData.action.add(sample: sample)
                 } else {
@@ -121,9 +121,13 @@ class ActionGestureRecognizer: UIGestureRecognizer {
             trackingData = TrackingData(action: actionProvider!(),
                                         start: firstTouch.timestamp,
                                         touch: firstTouch,
-                                        lastLocation: firstTouch.location(in: view!))
+                                        lastSample: SamplePoint(for: firstTouch, in: view!))
+        }
 
-            if touchType != .pencil {
+        if collect(touches: touches, event: event) {
+            if touchType == .pencil {
+                state = .began
+            } else {
                 startTimer = Timer.scheduledTimer(
                     withTimeInterval: CANCELATION_INTERVAL,
                     repeats: false,
@@ -131,13 +135,7 @@ class ActionGestureRecognizer: UIGestureRecognizer {
                         if self.state == .possible {
                             self.state = .began
                         }
-                    })
-            }
-        }
-
-        if collect(touches: touches, event: event) {
-            if touchType == .pencil {
-                state = .began
+                })
             }
         }
     }

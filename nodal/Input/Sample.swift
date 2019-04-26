@@ -49,11 +49,11 @@ struct SamplePoint {
                            altitude: touch.altitudeAngle,
                            azimuth: touch.azimuthAngle(in: view))
         default:
-            return nil
+            fatalError("invalid touch type")
         }
     }
 
-    init?(for touch: UITouch, in view: UIView) {
+    init(for touch: UITouch, in view: UIView) {
         self.location = touch.preciseLocation(in: view)
         self.timestamp = touch.timestamp
         let hasForceTouch = view.traitCollection.forceTouchCapability == .available
@@ -67,7 +67,7 @@ struct SamplePoint {
                            altitude: touch.altitudeAngle,
                            azimuth: touch.azimuthAngle(in: view))
         default:
-            return nil
+            fatalError("invalid touch type")
         }
     }
 
