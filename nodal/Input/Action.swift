@@ -12,13 +12,11 @@ typealias ActionProvider = () -> Action
 
 protocol Action {
     func add(sample: SamplePoint)
-    func add(predicted sample: SamplePoint)
+    func add(predicted sample: [SamplePoint])
     // add a sample that contains estimated data along
     // with a number that must be able to be used to
     // correspond to it
     func add(estimated sample: SamplePoint, with id: NSNumber)
-
-    func clearPredicted()
 
     func update(estimated sample: SamplePoint, with id: NSNumber)
     func update(final sample: SamplePoint, with id: NSNumber)
@@ -39,8 +37,7 @@ protocol Action {
 // override it
 protocol SimpleAction: Action {}
 extension SimpleAction {
-    func add(predicted sample: SamplePoint) {}
-    func clearPredicted() {}
+    func add(predicted sample: [SamplePoint]) {}
 
     func add(estimated sample: SamplePoint, with id: NSNumber) {
         self.add(sample: sample)
@@ -154,33 +151,39 @@ class SplineBuilder: Action {
     // map index to the index in `points` that contains the data for the corresponding UITouch
     var estimationMap = [NSNumber:Int]()
 
-    var predictedPoints = [SamplePoint]()
+    var nPredictedPoints: Int = 0
 
     func add(sample: SamplePoint) {
         spline.points.append(sample)
     }
 
-    func add(predicted sample: SamplePoint) {
-        predictedPoints.append(sample)
+    func add(predicted samples: [SamplePoint]) {
+        clearPredicted()
+        spline.points.append(contentsOf: samples)
+        nPredictedPoints = samples.count
     }
 
-    func clearPredicted() {
-        predictedPoints.removeAll()
+    private func clearPredicted() {
+        spline.points.removeLast(nPredictedPoints)
+        nPredictedPoints = 0
     }
 
     func add(estimated sample: SamplePoint, with id: NSNumber) {
+        clearPredicted()
         let index = spline.points.count
         spline.points.append(sample)
         estimationMap[id] = index
     }
 
     func update(estimated sample: SamplePoint, with id: NSNumber) {
+        clearPredicted()
         if let index = estimationMap[id] {
             spline.points[index] = sample
         }
     }
 
     func update(final sample: SamplePoint, with id: NSNumber) {
+        clearPredicted()
         if let index = estimationMap[id] {
             spline.points[index] = sample
             estimationMap.removeValue(forKey: id)
@@ -211,7 +214,6 @@ class BroadLine: SplineBuilder {
 class SlowAction: Action {
     var below: Action
     var touches = 0
-    var touchesPredicted = 0
     var registered = Set<NSNumber>()
     let interval: Int
 
@@ -231,11 +233,13 @@ class SlowAction: Action {
         touches += 1
     }
 
-    func add(predicted sample: SamplePoint) {
-        if touchesPredicted % interval == 0 {
-            below.add(predicted: sample)
+    func add(predicted samples: [SamplePoint]) {
+        var predictedPoints = 0
+        let undersampledSamples = samples.makeIterator().filter { _ in
+            predictedPoints += 1
+            return predictedPoints % interval == 0
         }
-        touchesPredicted += 1
+        below.add(predicted: undersampledSamples)
     }
 
     func add(estimated sample: SamplePoint, with id: NSNumber) {
@@ -244,10 +248,6 @@ class SlowAction: Action {
             below.add(estimated: sample, with: id)
         }
         touches += 1
-    }
-
-    func clearPredicted() {
-        below.clearPredicted()
     }
 
     func update(estimated sample: SamplePoint, with id: NSNumber) {

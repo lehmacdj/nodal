@@ -8,8 +8,9 @@
 
 import UIKit
 
+
 // core datatype for representing any kind of drawn line
-class Spline {
+class Spline: Sequence {
     var points: [SamplePoint]
 
     convenience init() {
@@ -27,11 +28,11 @@ class Spline {
             let (left, right) = sp.boundingPoints()
             let pathL = UIBezierPath()
             pathL.move(to: left)
-            pathL.addLine(to: sp.point.location)
+            pathL.addLine(to: sp.location)
             UIColor.blue.set()
             pathL.stroke()
             let pathR = UIBezierPath()
-            pathR.move(to: sp.point.location)
+            pathR.move(to: sp.location)
             pathR.addLine(to: right)
             UIColor.red.set()
             pathR.stroke()
@@ -54,35 +55,30 @@ class Spline {
         UIColor.black.set()
     }
 
-    func inBounds(_ index: Int) -> Bool {
-        return index >= 0
-            && index < points.count
-    }
-}
-
-extension Spline: Sequence {
     func makeIterator() -> SplinePointIterator {
-        return SplinePointIterator(self)
+        return SplinePointIterator(points)
     }
 }
 
 struct SplinePointIterator: IteratorProtocol {
-    let spline: Spline
+    let points: [SamplePoint]
     var index = 0
 
-    init(_ spline: Spline) {
-        self.spline = spline
+    init(_ points: [SamplePoint]) {
+        self.points = points
     }
 
     mutating func next() -> SplinePoint? {
-        guard spline.inBounds(index) else { return nil }
-
-        let point = spline.points[index]
+        guard inBounds(index) else { return nil }
 
         index += 1
-        return SplinePoint(point: point,
-                           index: index - 1,
-                           parent: spline)
+        return SplinePoint(index: index - 1,
+                           parent: self)
+    }
+
+    func inBounds(_ index: Int) -> Bool {
+        return index >= 0
+            && index < points.count
     }
 }
 
@@ -95,9 +91,8 @@ enum Neighbors {
 
 // a point and its neighbors
 struct SplinePoint {
-    let point: SamplePoint
     let index: Int // in bounds in the spline by invariant
-    let parent: Spline
+    let parent: SplinePointIterator
 
     var neighbors: Neighbors {
         if parent.inBounds(index - 1) && parent.inBounds(index + 1) {
@@ -125,11 +120,11 @@ struct SplinePoint {
     }
 
     var location: CGPoint {
-        return point.location
+        return parent.points[index].location
     }
 
     var force: CGFloat {
-        return point.force
+        return parent.points[index].force
     }
 
     func boundingDirections() -> (CGVector, CGVector) {
@@ -138,12 +133,12 @@ struct SplinePoint {
         case .noNeighbors:
             dleft = CGVector(magnitude: 1, angle: 0)
         case .followingOnly(let p):
-            dleft = CGVector(from: point.location, to: p.location).perpendicular().intoUnit()
+            dleft = CGVector(from: location, to: p.location).perpendicular().intoUnit()
         case .preceedingOnly(let p):
-            dleft = -1 * CGVector(from: point.location, to: p.location).perpendicular().intoUnit()
+            dleft = -1 * CGVector(from: location, to: p.location).perpendicular().intoUnit()
         case .preceedingAndFollowing(let first, let second):
-            let prev = CGVector(from: first.location, to: point.location)
-            let next = CGVector(from: point.location, to: second.location)
+            let prev = CGVector(from: first.location, to: location)
+            let next = CGVector(from: location, to: second.location)
             // points that are to the left are less than a 180˚ turn
             let isLeft = next.heading(relativeTo: prev) < CGFloat.pi
             if isLeft {

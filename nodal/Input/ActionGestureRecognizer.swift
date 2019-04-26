@@ -97,13 +97,8 @@ class ActionGestureRecognizer: UIGestureRecognizer {
         }
 
         if let predictedTouches = event.predictedTouches(for: trackingData.touch) {
-            for touch in predictedTouches {
-                if let sample = SamplePoint(for: touch, in: view!) {
-                    // all estimated touches are temporary so we don't keep
-                    // track of estimated properties
-                    trackingData.action.add(predicted: sample)
-                }
-            }
+            let predicted = predictedTouches.map { SamplePoint(for: $0, in: view!) }
+            trackingData.action.add(predicted: predicted)
         }
 
         return true
@@ -169,16 +164,15 @@ class ActionGestureRecognizer: UIGestureRecognizer {
             // optimization oportunity, store the touches that needed updates
             // and make sure that this is one of them before constructing a
             // new SamplePoint
-            if let sample = SamplePoint(for: touch, in: view!) {
-                let updateIndex = touch.estimationUpdateIndex!
-                // should we say an update is final if there are no
-                // remaining updates expected? or could such a touch
-                // still receive an update
-                if touch.estimatedProperties.isEmpty {
-                    action.update(final: sample, with: updateIndex)
-                } else {
-                    action.update(estimated: sample, with: updateIndex)
-                }
+            let sample = SamplePoint(for: touch, in: view!)
+            let updateIndex = touch.estimationUpdateIndex!
+            // should we say an update is final if there are no
+            // remaining updates expected? or could such a touch
+            // still receive an update
+            if touch.estimatedProperties.isEmpty {
+                action.update(final: sample, with: updateIndex)
+            } else {
+                action.update(estimated: sample, with: updateIndex)
             }
         }
     }
