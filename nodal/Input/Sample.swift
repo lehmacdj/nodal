@@ -44,7 +44,7 @@ struct SamplePoint {
             self.data = .touch3D(force: touch.force)
         case .direct where !hasForceTouch:
             self.data = .touch
-        case .stylus:
+        case .pencil:
             self.data = .pencil(force: touch.force,
                            altitude: touch.altitudeAngle,
                            azimuth: touch.azimuthAngle(in: view))
@@ -62,7 +62,7 @@ struct SamplePoint {
             self.data = .touch3D(force: touch.force)
         case .direct where !hasForceTouch:
             self.data = .touch
-        case .stylus:
+        case .pencil:
             self.data = .pencil(force: touch.force,
                            altitude: touch.altitudeAngle,
                            azimuth: touch.azimuthAngle(in: view))
