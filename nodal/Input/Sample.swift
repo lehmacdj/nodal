@@ -23,33 +23,19 @@ struct SamplePoint {
     var data: SampleData
 
     init?(for touch: UITouch, in view: UIView, prev sample: SamplePoint) {
-        self.init(for: touch, in: view, prev: sample.location)
+        self.init(for: touch, in: view)
 
-        guard abs(self.force - sample.force) < IGNORE_FORCE else {
+        if (abs(self.force - sample.force) < IGNORE_FORCE)
+            && CGVector(from: self.location, to: sample.location).quadrance < IGNORE_DIST {
             return nil
         }
     }
 
     init?(for touch: UITouch, in view: UIView, prev point: CGPoint) {
-        self.location = touch.preciseLocation(in: view)
-        self.timestamp = touch.timestamp
+        self.init(for: touch, in: view)
 
-        guard CGVector(from: self.location, to: point).quadrance > IGNORE_DIST else {
-            return nil
-        }
-
-        let hasForceTouch = view.traitCollection.forceTouchCapability == .available
-        switch touch.type {
-        case .direct where hasForceTouch:
-            self.data = .touch3D(force: touch.force)
-        case .direct where !hasForceTouch:
-            self.data = .touch
-        case .pencil:
-            self.data = .pencil(force: touch.force,
-                           altitude: touch.altitudeAngle,
-                           azimuth: touch.azimuthAngle(in: view))
-        default:
-            fatalError("invalid touch type")
+        if CGVector(from: self.location, to: point).quadrance < IGNORE_DIST {
+                return nil
         }
     }
 
@@ -60,13 +46,16 @@ struct SamplePoint {
         switch touch.type {
         case .direct where hasForceTouch:
             self.data = .touch3D(force: touch.force)
-        case .direct where !hasForceTouch:
+        case .direct:
             self.data = .touch
         case .pencil:
             self.data = .pencil(force: touch.force,
                            altitude: touch.altitudeAngle,
                            azimuth: touch.azimuthAngle(in: view))
-        default:
+
+        case .indirect:
+            fatalError("sample points can't handle indirect touches")
+        @unknown default:
             fatalError("invalid touch type")
         }
     }
