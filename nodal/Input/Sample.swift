@@ -22,6 +22,14 @@ struct SamplePoint {
     let location: CGPoint
     var data: SampleData
 
+    init?(for touch: UITouch, in view: UIView, prev sample: SamplePoint) {
+        self.init(for: touch, in: view, prev: sample.location)
+
+        guard abs(self.force - sample.force) < IGNORE_FORCE else {
+            return nil
+        }
+    }
+
     init?(for touch: UITouch, in view: UIView, prev point: CGPoint) {
         self.location = touch.preciseLocation(in: view)
         self.timestamp = touch.timestamp
@@ -61,5 +69,22 @@ struct SamplePoint {
         default:
             return nil
         }
+    }
+
+    // a normalized force factor that can be used to modify the width of lines
+    var force: CGFloat {
+        let protoForce: CGFloat
+        switch data {
+        case let .pencil(force: force, altitude: altitude, azimuth: _):
+            protoForce = force * sin(altitude)
+        case .touch3D(let force):
+            protoForce = force
+        case .touch:
+            protoForce = 1.0
+        }
+
+        // TODO: some kind of restriction of the domain to be more
+        // regular. Right now the value could be anywhere from 0 to infinity
+        return protoForce
     }
 }

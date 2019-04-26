@@ -128,21 +128,8 @@ struct SplinePoint {
         return point.location
     }
 
-    // a normalized force factor that can be used to modify the width of lines
     var force: CGFloat {
-        let protoForce: CGFloat
-        switch point.data {
-        case let .pencil(force: force, altitude: altitude, azimuth: _):
-            protoForce = force * sin(altitude)
-        case .touch3D(let force):
-            protoForce = force
-        case .touch:
-            protoForce = 1.0
-        }
-
-        // TODO: some kind of restriction of the domain to be more
-        // regular. Right now the value could be anywhere from 0 to infinity
-        return protoForce
+        return point.force
     }
 
     func boundingDirections() -> (CGVector, CGVector) {
