@@ -146,7 +146,7 @@ class DrawPrimitiveLine: SimpleAction {
 // of lines based on a sequence of points
 // subclasses should override asElement to produce the correct final (and intermediate results)
 class SplineBuilder: Action {
-    var spline = Spline()
+    private var spline = Spline()
 
     // map index to the index in `points` that contains the data for the corresponding UITouch
     var estimationMap = [NSNumber:Int]()
@@ -154,6 +154,7 @@ class SplineBuilder: Action {
     var nPredictedPoints: Int = 0
 
     func add(sample: SamplePoint) {
+        clearPredicted()
         spline.points.append(sample)
     }
 
@@ -163,6 +164,7 @@ class SplineBuilder: Action {
         nPredictedPoints = samples.count
     }
 
+    // this function should be called before sending the spline off to somewhere else
     private func clearPredicted() {
         spline.points.removeLast(nPredictedPoints)
         nPredictedPoints = 0
@@ -198,10 +200,21 @@ class SplineBuilder: Action {
     func finish(with transform: CGAffineTransform) -> CanvasElement? {
         return nil
     }
+
+    func certainSpline() -> Spline {
+        let tmpSpline = Spline(points: spline.points)
+        tmpSpline.points.removeLast(nPredictedPoints)
+        return tmpSpline
+    }
+
+    func predictedSpline() -> Spline {
+        return Spline(points: spline.points)
+    }
 }
 
 class BroadLine: SplineBuilder {
     override func finish(with transform: CGAffineTransform) -> CanvasElement? {
+        let spline = certainSpline()
         guard spline.points.count > 0 else {
             return nil
         }
