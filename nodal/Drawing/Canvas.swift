@@ -190,7 +190,7 @@ class PenStroke: CanvasElement {
             }
 
             for point in self.spline {
-                if point.point.location == first.location {
+                if point.location == first.location {
                     // on the first point in the spline just move to the start of it
                     path.move(to: point.location)
                     continue

@@ -56,16 +56,28 @@ class Spline: Sequence {
     }
 
     func makeIterator() -> SplinePointIterator {
-        return SplinePointIterator(points)
+        return SplinePointIterator(self)
     }
 }
 
 struct SplinePointIterator: IteratorProtocol {
-    let points: [SamplePoint]
+    let spline: Spline
     var index = 0
 
-    init(_ points: [SamplePoint]) {
-        self.points = points
+    fileprivate var points: [SamplePoint] {
+        return spline.points
+    }
+
+    var point: SamplePoint {
+        return points[index]
+    }
+
+    var location: CGPoint {
+        return point.location
+    }
+
+    init(_ spline: Spline) {
+        self.spline = spline
     }
 
     mutating func next() -> SplinePoint? {
@@ -78,7 +90,7 @@ struct SplinePointIterator: IteratorProtocol {
 
     func inBounds(_ index: Int) -> Bool {
         return index >= 0
-            && index < points.count
+            && index < spline.points.count
     }
 }
 
