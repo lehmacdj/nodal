@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		030BFF0B227F5D780043C5BA /* SpatialIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030BFF0A227F5D780043C5BA /* SpatialIndex.swift */; };
+		030BFF0D227F5DD40043C5BA /* Locatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030BFF0C227F5DD40043C5BA /* Locatable.swift */; };
+		030BFF10227F63E10043C5BA /* SplineRecognizerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030BFF0E227F63E10043C5BA /* SplineRecognizerDelegate.swift */; };
+		030BFF11227F63E10043C5BA /* SplineRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030BFF0F227F63E10043C5BA /* SplineRecognizer.swift */; };
+		030BFF13227F7BF20043C5BA /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030BFF12227F7BF20043C5BA /* Tools.swift */; };
 		033788EE1EF85485007E0C80 /* ToolSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033788ED1EF85485007E0C80 /* ToolSelector.swift */; };
 		033788F01EF854C8007E0C80 /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033788EF1EF854C8007E0C80 /* BaseView.swift */; };
 		033EAE3C1EBF9F0A000F4053 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033EAE3B1EBF9F0A000F4053 /* AppDelegate.swift */; };
@@ -19,10 +24,9 @@
 		035C9C611EE9D57100E2C515 /* CGMathExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 035C9C601EE9D57100E2C515 /* CGMathExt.swift */; };
 		035C9C631EF0DAFB00E2C515 /* Spline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 035C9C621EF0DAFB00E2C515 /* Spline.swift */; };
 		036DB63522676AFD009738E7 /* CatmullRom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036DB63422676AFD009738E7 /* CatmullRom.swift */; };
-		036ECA8F1EC0F03F0071AC02 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036ECA8E1EC0F03F0071AC02 /* Action.swift */; };
 		036ECA911EC0F0B20071AC02 /* CanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036ECA901EC0F0B20071AC02 /* CanvasView.swift */; };
 		036ECA931EC0F0C30071AC02 /* Canvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036ECA921EC0F0C30071AC02 /* Canvas.swift */; };
-		0376B2331EE106DD007BFC1A /* ActionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0376B2321EE106DD007BFC1A /* ActionGestureRecognizer.swift */; };
+		03A700F922B305AD00CC5607 /* PenStrokeDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A700F822B305AD00CC5607 /* PenStrokeDrawer.swift */; };
 		03DAEA251EE691FE00F6EF91 /* Sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03DAEA241EE691FE00F6EF91 /* Sample.swift */; };
 /* End PBXBuildFile section */
 
@@ -37,6 +41,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		030BFF0A227F5D780043C5BA /* SpatialIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpatialIndex.swift; sourceTree = "<group>"; };
+		030BFF0C227F5DD40043C5BA /* Locatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Locatable.swift; sourceTree = "<group>"; };
+		030BFF0E227F63E10043C5BA /* SplineRecognizerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplineRecognizerDelegate.swift; sourceTree = "<group>"; };
+		030BFF0F227F63E10043C5BA /* SplineRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplineRecognizer.swift; sourceTree = "<group>"; };
+		030BFF12227F7BF20043C5BA /* Tools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
 		033788ED1EF85485007E0C80 /* ToolSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolSelector.swift; sourceTree = "<group>"; };
 		033788EF1EF854C8007E0C80 /* BaseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
 		033EAE381EBF9F0A000F4053 /* nodal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nodal.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -53,10 +62,9 @@
 		035C9C601EE9D57100E2C515 /* CGMathExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGMathExt.swift; sourceTree = "<group>"; };
 		035C9C621EF0DAFB00E2C515 /* Spline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spline.swift; sourceTree = "<group>"; };
 		036DB63422676AFD009738E7 /* CatmullRom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatmullRom.swift; sourceTree = "<group>"; };
-		036ECA8E1EC0F03F0071AC02 /* Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		036ECA901EC0F0B20071AC02 /* CanvasView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasView.swift; sourceTree = "<group>"; };
 		036ECA921EC0F0C30071AC02 /* Canvas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Canvas.swift; sourceTree = "<group>"; };
-		0376B2321EE106DD007BFC1A /* ActionGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionGestureRecognizer.swift; sourceTree = "<group>"; };
+		03A700F822B305AD00CC5607 /* PenStrokeDrawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PenStrokeDrawer.swift; sourceTree = "<group>"; };
 		03DAEA241EE691FE00F6EF91 /* Sample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sample.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -103,7 +111,10 @@
 				039A96441FFD9C64009BCB30 /* Input */,
 				033EAE3B1EBF9F0A000F4053 /* AppDelegate.swift */,
 				033EAE3D1EBF9F0A000F4053 /* MainNodalViewController.swift */,
+				030BFF12227F7BF20043C5BA /* Tools.swift */,
 				033788ED1EF85485007E0C80 /* ToolSelector.swift */,
+				030BFF0A227F5D780043C5BA /* SpatialIndex.swift */,
+				030BFF0C227F5DD40043C5BA /* Locatable.swift */,
 				034F06011FFAC8D20055100A /* CoreTypes.swift */,
 				033788EF1EF854C8007E0C80 /* BaseView.swift */,
 				034F06051FFAC9320055100A /* Extensions */,
@@ -135,9 +146,9 @@
 		039A96441FFD9C64009BCB30 /* Input */ = {
 			isa = PBXGroup;
 			children = (
-				036ECA8E1EC0F03F0071AC02 /* Action.swift */,
+				030BFF0E227F63E10043C5BA /* SplineRecognizerDelegate.swift */,
+				030BFF0F227F63E10043C5BA /* SplineRecognizer.swift */,
 				03DAEA241EE691FE00F6EF91 /* Sample.swift */,
-				0376B2321EE106DD007BFC1A /* ActionGestureRecognizer.swift */,
 			);
 			path = Input;
 			sourceTree = "<group>";
@@ -149,6 +160,7 @@
 				035C9C621EF0DAFB00E2C515 /* Spline.swift */,
 				036ECA901EC0F0B20071AC02 /* CanvasView.swift */,
 				036DB63422676AFD009738E7 /* CatmullRom.swift */,
+				03A700F822B305AD00CC5607 /* PenStrokeDrawer.swift */,
 			);
 			path = Drawing;
 			sourceTree = "<group>";
@@ -198,7 +210,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1220;
 				ORGANIZATIONNAME = "Devin Lehmacher";
 				TargetAttributes = {
 					033EAE371EBF9F0A000F4053 = {
@@ -258,19 +270,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				030BFF13227F7BF20043C5BA /* Tools.swift in Sources */,
 				034F06021FFAC8D20055100A /* CoreTypes.swift in Sources */,
+				030BFF0D227F5DD40043C5BA /* Locatable.swift in Sources */,
+				030BFF0B227F5D780043C5BA /* SpatialIndex.swift in Sources */,
 				035C9C631EF0DAFB00E2C515 /* Spline.swift in Sources */,
 				033EAE3E1EBF9F0A000F4053 /* MainNodalViewController.swift in Sources */,
+				030BFF10227F63E10043C5BA /* SplineRecognizerDelegate.swift in Sources */,
 				036ECA911EC0F0B20071AC02 /* CanvasView.swift in Sources */,
 				033788EE1EF85485007E0C80 /* ToolSelector.swift in Sources */,
 				034F06041FFAC9240055100A /* GestureRecognizerExt.swift in Sources */,
-				036ECA8F1EC0F03F0071AC02 /* Action.swift in Sources */,
 				036ECA931EC0F0C30071AC02 /* Canvas.swift in Sources */,
 				033EAE3C1EBF9F0A000F4053 /* AppDelegate.swift in Sources */,
 				036DB63522676AFD009738E7 /* CatmullRom.swift in Sources */,
 				03DAEA251EE691FE00F6EF91 /* Sample.swift in Sources */,
-				0376B2331EE106DD007BFC1A /* ActionGestureRecognizer.swift in Sources */,
+				03A700F922B305AD00CC5607 /* PenStrokeDrawer.swift in Sources */,
 				033788F01EF854C8007E0C80 /* BaseView.swift in Sources */,
+				030BFF11227F63E10043C5BA /* SplineRecognizer.swift in Sources */,
 				035C9C611EE9D57100E2C515 /* CGMathExt.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -331,6 +347,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -355,7 +372,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -391,6 +408,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -409,7 +427,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";

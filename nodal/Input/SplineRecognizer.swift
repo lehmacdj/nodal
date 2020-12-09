@@ -9,27 +9,18 @@
 import UIKit
 import UIKit.UIGestureRecognizerSubclass
 
-// the distance to ignore other touches within
-let IGNORE_DIST = CGFloat(0.03)
-let IGNORE_FORCE = CGFloat(0.1)
-let CANCELATION_INTERVAL = TimeInterval(0.1)
-
 // recognizes Actions
-class ActionGestureRecognizer: UIGestureRecognizer {
-    // the action to perform on touches
-    public var actionProvider: ActionProvider?
-        = { SlowAction(below: BroadLine(), interval: 1) } {
+class SplineRecognizer: UIGestureRecognizer {
+    // since the recognizer is disabled when the delegate is nil it is safe
+    // to implicitly unwrap the delegate
+    public var splineRecognizerDelegate: SplineRecognizerDelegate! {
         didSet {
-            if actionProvider == nil {
+            if splineRecognizerDelegate == nil {
                 isEnabled = false
             } else {
                 isEnabled = true
             }
         }
-    }
-
-    public var action: Action? {
-        return trackingData?.action
     }
 
     // accepted touch types
@@ -40,7 +31,6 @@ class ActionGestureRecognizer: UIGestureRecognizer {
     }
 
     struct TrackingData {
-        let action: Action
         let start: TimeInterval
         let touch: UITouch
         var lastSample: SamplePoint
@@ -87,9 +77,9 @@ class ActionGestureRecognizer: UIGestureRecognizer {
             if let sample = SamplePoint(for: touch, in: view!, prev: trackingData.lastSample) {
                 self.trackingData!.lastSample = sample
                 if touch.estimatedPropertiesExpectingUpdates.isEmpty {
-                    trackingData.action.add(sample: sample)
+                    splineRecognizerDelegate.add(sample: sample)
                 } else {
-                    trackingData.action.add(estimated: sample,
+                    splineRecognizerDelegate.add(estimated: sample,
                                             // there are estimated properties?
                                             with: touch.estimationUpdateIndex!)
                 }
@@ -98,7 +88,7 @@ class ActionGestureRecognizer: UIGestureRecognizer {
 
         if let predictedTouches = event.predictedTouches(for: trackingData.touch) {
             let predicted = predictedTouches.map { SamplePoint(for: $0, in: view!) }
-            trackingData.action.add(predicted: predicted)
+            splineRecognizerDelegate.add(predicted: predicted)
         }
 
         return true
@@ -113,8 +103,7 @@ class ActionGestureRecognizer: UIGestureRecognizer {
         if let firstTouch = touches.first {
             // the action should exist if we got a touches began, because
             // we disable the action recognizer when the provider is nil
-            trackingData = TrackingData(action: actionProvider!(),
-                                        start: firstTouch.timestamp,
+            trackingData = TrackingData(start: firstTouch.timestamp,
                                         touch: firstTouch,
                                         lastSample: SamplePoint(for: firstTouch, in: view!))
         }
@@ -156,10 +145,6 @@ class ActionGestureRecognizer: UIGestureRecognizer {
     }
 
     override func touchesEstimatedPropertiesUpdated(_ touches: Set<UITouch>) {
-        guard let action = trackingData?.action else {
-            return
-        }
-
         for touch in touches {
             // optimization oportunity, store the touches that needed updates
             // and make sure that this is one of them before constructing a
@@ -170,15 +155,16 @@ class ActionGestureRecognizer: UIGestureRecognizer {
             // remaining updates expected? or could such a touch
             // still receive an update
             if touch.estimatedProperties.isEmpty {
-                action.update(final: sample, with: updateIndex)
+                splineRecognizerDelegate.update(final: sample, with: updateIndex)
             } else {
-                action.update(estimated: sample, with: updateIndex)
+                splineRecognizerDelegate.update(estimated: sample, with: updateIndex)
             }
         }
     }
 
     override func reset() {
         trackingData = nil
+        splineRecognizerDelegate.reset()
         if let timer = startTimer {
             timer.invalidate()
             startTimer = nil

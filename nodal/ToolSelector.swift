@@ -8,34 +8,20 @@
 
 import UIKit
 
-struct Tool {
-    // the effect on the state of the window, when pressing the tool
-    typealias Effect = (TouchType) -> ()
-    let effect:  Effect
+protocol ToolButtonDelegate {
+    // the button that this is a delegate for
+    // must be unique; the model is one delegate per tool
+    // the delegate determines the behavior when
+    // using the button; and the button provides the API
+    // for manipulating its own appearances
+    // set when used as a delegate; thus implicitly unwrapped
+    var button: ToolSelectorButton! { get set }
 
-    enum Display {
-        // case image(UIImage)
-        case text(String)
-    }
-    let displayStyle: Display
+    func clicked(by touchType: TouchType)
+    func loadButton()
 
-    // does the effect focus the pressed tool or not?
-    enum EffectType {
-        case instant
-        // allows a destructor for the tool
-        case focus(Effect?)
-    }
-    let effectType: EffectType
-    
-    // the optional destructor based on the effect type
-    var destructor: Effect? {
-        switch effectType {
-        case let .focus(d):
-            return d
-        default:
-            return nil
-        }
-    }
+    var isSelectedByFinger: Bool { get }
+    var isSelectedByPencil: Bool { get }
 }
 
 class ToolSelectorView: BaseView {
@@ -50,44 +36,15 @@ class ToolSelectorView: BaseView {
 
     var buttons = [ToolSelectorButton]()
 
-    var selectedByPencil: ToolSelectorButton? {
-        willSet {
-            selectedByPencil?.destructor?(.pencil)
-            selectedByPencil?.isSelectedByPencil = false
-            newValue?.isSelectedByPencil = true
-        }
-    }
-
-    var selectedByFinger: ToolSelectorButton? {
-        willSet {
-            selectedByFinger?.destructor?(.finger)
-            selectedByFinger?.isSelectedByFinger = false
-            newValue?.isSelectedByFinger = true
-        }
-    }
-
     // initialize tools based on the array of tool specifications,
     // the first tool is selected as the default tool
-    init(tools: [Tool]) {
+    init(tools: [ToolButtonDelegate]) {
         super.init()
 
         for tool in tools {
-            switch tool.displayStyle {
-            case .text(let text):
-                let button = ToolSelectorButton(text: text)
-                button.effect = createEffectFor(control: button, tool: tool)
-                button.destructor = tool.destructor
-                buttons.append(button)
-                stackView.addArrangedSubview(button)
-                print(text)
-            }
-        }
-
-        if let first = buttons.first {
-            selectedByFinger = first
-            selectedByPencil = first
-            first.isSelectedByFinger = true
-            first.isSelectedByPencil = true
+            let button = ToolSelectorButton(delegate: tool)
+            buttons.append(button)
+            stackView.addArrangedSubview(button)
         }
 
         self.addSubview(stackView)
@@ -97,27 +54,6 @@ class ToolSelectorView: BaseView {
     // init with empty tool array
     convenience override init() {
         fatalError("are you sure this is what you wanted to do?")
-    }
-
-    func createEffectFor(control: ToolSelectorButton, tool: Tool) -> Tool.Effect {
-        return { tt in
-            switch tool.effectType {
-            case .instant:
-                // don't do anything if tool is instant
-                // in the future we may want an animation here
-                break
-            case .focus:
-                // we need to focus, the tool and set the tool
-                // based on whatever focused the touch
-                switch tt {
-                case .pencil:
-                    self.selectedByPencil = control
-                case .finger:
-                    self.selectedByFinger = control
-                }
-            }
-            tool.effect(tt)
-        }
     }
 }
 
@@ -146,6 +82,21 @@ class ToolSelectorButton: BaseView {
         return rec
     }()
 
+    var text: String? {
+        get {
+            return textView.text
+        }
+        set {
+            textView.text = newValue
+        }
+    }
+
+    let textView: UILabel = {
+        let tv = UILabel()
+        tv.textColor = .white
+        return tv
+    }()
+
     func setColor() {
         if isSelectedByPencil && isSelectedByFinger {
             backgroundColor = UIColor.purple
@@ -159,31 +110,33 @@ class ToolSelectorButton: BaseView {
         setNeedsDisplay()
     }
 
-    var isSelectedByPencil = false {
+    var isSelectedByPencil: Bool {
+        return delegate?.isSelectedByPencil ?? false
+    }
+
+    var isSelectedByFinger: Bool {
+        return delegate?.isSelectedByFinger ?? false
+    }
+
+    var delegate: ToolButtonDelegate? {
+        willSet {
+            delegate?.button = nil
+        }
         didSet {
-            setColor()
+            delegate?.button = self
         }
     }
 
-    var isSelectedByFinger = false {
-        didSet {
-            setColor()
-        }
+    convenience init(delegate: ToolButtonDelegate) {
+        self.init()
+        self.delegate = delegate
     }
-    
-    // we need to knot the button together given the cyclic dependency
-    // between the closure and the button
-    var effect: Tool.Effect?
-    var destructor: Tool.Effect?
 
-    init(text: String) {
-        super.init()
-
+    override convenience init() {
         backgroundColor = .black
 
-        let textView = UILabel()
-        textView.text = text
-        textView.textColor = .white
+        delegate?.loadButton()
+
         self.addSubview(textView)
         self.equalConstraints(to: textView)
         textView.backgroundColor = .clear
@@ -195,13 +148,9 @@ class ToolSelectorButton: BaseView {
         print(fingerRecognizer)
     }
 
-    override convenience init() {
-        self.init(text: "")
-    }
-
     @objc func tapped(_ recognizer: UIGestureRecognizer) {
         print("got a tap")
         assert(recognizer === fingerRecognizer || recognizer === pencilRecognizer)
-        effect?(recognizer === fingerRecognizer ? .finger : .pencil)
+        delegate?.clicked(by: recognizer === fingerRecognizer ? .finger : .pencil)
     }
 }

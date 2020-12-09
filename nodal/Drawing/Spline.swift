@@ -9,7 +9,9 @@
 import UIKit
 
 
-// core datatype for representing any kind of drawn line
+// core datatype for representing any sequence of points
+// provides access neighbors in the sequence for the
+// purpose of interpolation
 class Spline: Sequence {
     var points: [SamplePoint]
 
